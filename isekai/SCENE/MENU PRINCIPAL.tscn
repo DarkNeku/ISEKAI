@@ -1,0 +1,70 @@
+[gd_scene load_steps=6 format=3 uid="uid://2nxnj2fj08ng"]
+
+[ext_resource type="Texture2D" uid="uid://ly4u5108pt5w" path="res://ASSET/MENUS/Complete_UI_Essential_Pack_Free/01_Flat_Theme/Sprites/UI_Flat_Banner01a.png" id="1_hl73s"]
+[ext_resource type="FontFile" uid="uid://1cb82rfm6v8s" path="res://ASSET/FUENTES/Pixeled.ttf" id="2_jg5ox"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jg5ox"]
+texture = ExtResource("1_hl73s")
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x8eyv"]
+texture = ExtResource("1_hl73s")
+expand_margin_left = 20.0
+expand_margin_top = 20.0
+expand_margin_right = 20.0
+expand_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hl73s"]
+texture = ExtResource("1_hl73s")
+
+[node name="MENU PRINCIPAL" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="."]
+custom_minimum_size = Vector2(0.47, 0.28)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -367.5
+offset_top = 40.0
+offset_right = 367.5
+offset_bottom = 321.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+localize_numeral_system = false
+theme_override_colors/font_disabled_color = Color(0, 0, 0.956863, 1)
+theme_override_colors/font_hover_pressed_color = Color(2.40654e-07, 0, 0.569396, 1)
+theme_override_colors/font_hover_color = Color(1.10701e-06, 0, 0.530676, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0.956863, 1)
+theme_override_colors/font_color = Color(0.0616354, 0.0731649, 0.488354, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0.929412, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 1, 1)
+theme_override_fonts/font = ExtResource("2_jg5ox")
+theme_override_font_sizes/font_size = 92
+theme_override_styles/hover = SubResource("StyleBoxTexture_jg5ox")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_x8eyv")
+theme_override_styles/normal = SubResource("StyleBoxTexture_hl73s")
+text = "INICIAR"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 500.0
+offset_bottom = 909.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 300
+text = "ISEKAI"
+horizontal_alignment = 1
