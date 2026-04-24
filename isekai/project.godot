@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="ISEKAI"
+run/main_scene="uid://2nxnj2fj08ng"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 

@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://2nxnj2fj08ng"]
+[gd_scene load_steps=7 format=3 uid="uid://2nxnj2fj08ng"]
 
 [ext_resource type="Texture2D" uid="uid://ly4u5108pt5w" path="res://ASSET/MENUS/Complete_UI_Essential_Pack_Free/01_Flat_Theme/Sprites/UI_Flat_Banner01a.png" id="1_hl73s"]
+[ext_resource type="Script" uid="uid://cwqmd8qi3m7y1" path="res://SCRIPT/menu_principal.gd" id="1_jg5ox"]
 [ext_resource type="FontFile" uid="uid://1cb82rfm6v8s" path="res://ASSET/FUENTES/Pixeled.ttf" id="2_jg5ox"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jg5ox"]
@@ -27,8 +28,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_jg5ox")
 
-[node name="Button" type="Button" parent="."]
+[node name="BTN_INICIO" type="Button" parent="."]
 custom_minimum_size = Vector2(0.47, 0.28)
 layout_mode = 1
 anchors_preset = 8
@@ -68,3 +70,5 @@ grow_horizontal = 2
 theme_override_font_sizes/font_size = 300
 text = "ISEKAI"
 horizontal_alignment = 1
+
+[connection signal="pressed" from="BTN_INICIO" to="." method="_on_BTN_INICIO_pressed"]
