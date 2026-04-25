@@ -25,7 +25,7 @@ func _on_AGREGAR_pressed():
 	
 	var nuevo = $Panel/LISTA_JUGADORES/CONT_JUGADORES.duplicate()
 	nuevo.name = "Jugador_" + str(contador)
-	nuevo.get_node("CONT_LABEL/LBL_NUMERO").text = "#" + str(contador)
+	nuevo.get_node("CONT_LABEL/LBL_NUMERO").text = " " + str(contador)
 	nuevo.get_node("LE_NOMBRE").text = ""
 	
 	$Panel/LISTA_JUGADORES.add_child(nuevo)

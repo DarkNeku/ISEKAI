@@ -4,6 +4,8 @@
 
 [sub_resource type="Theme" id="Theme_wq4lc"]
 default_font_size = 35
+Label/colors/font_color = Color(0.699653, 0.699653, 0.699653, 1)
+Label/font_sizes/font_size = 80
 
 [node name="JUGADORES" type="Control"]
 layout_mode = 3
@@ -43,12 +45,12 @@ size_flags_vertical = 4
 [node name="LBL_JUGADOR" type="Label" parent="Panel/LISTA_JUGADORES/CONT_JUGADORES/CONT_LABEL"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 60
-text = "JUGADOR:"
+text = "JUGADOR"
 
 [node name="LBL_NUMERO" type="Label" parent="Panel/LISTA_JUGADORES/CONT_JUGADORES/CONT_LABEL"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 60
-text = "# 1"
+text = " 1"
 
 [node name="LE_NOMBRE" type="LineEdit" parent="Panel/LISTA_JUGADORES/CONT_JUGADORES"]
 layout_mode = 2
@@ -104,7 +106,7 @@ text = "VOLVER"
 [node name="CONFIRMAR" type="ConfirmationDialog" parent="Panel"]
 title = "FAVOR CONFIRMAR"
 initial_position = 1
-size = Vector2i(500, 178)
+size = Vector2i(767, 360)
 theme = SubResource("Theme_wq4lc")
 ok_button_text = "SI"
 dialog_text = "¿ESTA SEGURO?"

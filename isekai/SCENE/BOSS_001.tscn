@@ -1,3 +1,226 @@
-[gd_scene format=3 uid="uid://b2r8purmb6grb"]
+[gd_scene load_steps=5 format=3 uid="uid://b2r8purmb6grb"]
 
-[node name="Node2D" type="Node2D"]
+[ext_resource type="PackedScene" uid="uid://cq2d3r0eww2mw" path="res://SPRITE/BOSS_1.tscn" id="1_2nsg4"]
+[ext_resource type="Script" uid="uid://b3rwxmh12dwh8" path="res://SCRIPT/boss_001.gd" id="1_6h5nb"]
+[ext_resource type="Texture2D" uid="uid://dnr467g1fn1we" path="res://ASSET/MENUS/ICON 2.png" id="3_6xav7"]
+
+[sub_resource type="Theme" id="Theme_6xav7"]
+default_font_size = 30
+Label/font_sizes/font_size = 40
+
+[node name="CONTROL" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6h5nb")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BOSS_1" parent="Panel" instance=ExtResource("1_2nsg4")]
+position = Vector2(522, 579)
+scale = Vector2(6, 6)
+
+[node name="VIDA_BOSS" type="ProgressBar" parent="Panel"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 50.0
+offset_right = 1040.0
+offset_bottom = 180.0
+theme_override_font_sizes/font_size = 70
+
+[node name="Sprite2D" type="Sprite2D" parent="Panel"]
+position = Vector2(540, 950)
+scale = Vector2(1.4, 1.4)
+texture = ExtResource("3_6xav7")
+
+[node name="Control" type="Control" parent="Panel"]
+anchors_preset = 0
+offset_left = 50.0
+offset_top = 1059.74
+offset_right = 1029.0
+offset_bottom = 1195.74
+
+[node name="GridContainer" type="GridContainer" parent="Panel/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 4
+
+[node name="Panel" type="Panel" parent="Panel/Control/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Panel/Control/GridContainer/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 80
+text = "1"
+horizontal_alignment = 1
+
+[node name="Panel2" type="Panel" parent="Panel/Control/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Panel/Control/GridContainer/Panel2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 80
+text = "2"
+horizontal_alignment = 1
+
+[node name="Panel3" type="Panel" parent="Panel/Control/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Panel/Control/GridContainer/Panel3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 80
+text = "3"
+horizontal_alignment = 1
+
+[node name="Panel4" type="Panel" parent="Panel/Control/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Panel/Control/GridContainer/Panel4"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 80
+text = "4"
+horizontal_alignment = 1
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 1225.0
+offset_right = 95.0
+offset_bottom = 1248.0
+theme_override_font_sizes/font_size = 50
+text = "TU TURNO"
+
+[node name="Label2" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 283.0
+offset_top = 1227.0
+offset_right = 323.0
+offset_bottom = 1296.0
+theme_override_font_sizes/font_size = 50
+
+[node name="Control2" type="Control" parent="Panel"]
+anchors_preset = 0
+offset_left = 40.0
+offset_top = 1361.0
+offset_right = 1040.0
+offset_bottom = 1852.0
+
+[node name="Button" type="Button" parent="Panel/Control2"]
+layout_mode = 0
+offset_left = 337.0
+offset_top = -13.0
+offset_right = 642.0
+offset_bottom = 132.0
+theme_override_font_sizes/font_size = 100
+text = "DAÑO"
+
+[node name="Button5" type="Button" parent="Panel/Control2"]
+layout_mode = 0
+offset_left = -19.0
+offset_top = 170.0
+offset_right = 411.0
+offset_bottom = 315.0
+theme_override_font_sizes/font_size = 100
+text = "DIRECTO"
+
+[node name="Button2" type="Button" parent="Panel/Control2"]
+visible = false
+layout_mode = 0
+offset_left = 201.0
+offset_top = 123.0
+offset_right = 788.0
+offset_bottom = 336.0
+theme_override_font_sizes/font_size = 150
+text = "LANZAR"
+
+[node name="Button3" type="Button" parent="Panel/Control2"]
+layout_mode = 0
+offset_left = 698.0
+offset_top = 260.0
+offset_right = 995.0
+offset_bottom = 378.0
+theme_override_font_sizes/font_size = 80
+text = "RESTAR"
+
+[node name="Button4" type="Button" parent="Panel/Control2"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 358.0
+offset_right = 604.0
+offset_bottom = 476.0
+theme_override_font_sizes/font_size = 80
+text = "LISTO"
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
+title = ""
+initial_position = 1
+size = Vector2i(601, 216)
+theme = SubResource("Theme_6xav7")
+dialog_text = "¿ESTAS SEGURO QUE QUIERES 
+APLICAR ESTE DAÑO?"
+cancel_button_text = "NO"
