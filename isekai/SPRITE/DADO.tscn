@@ -1,0 +1,102 @@
+[gd_scene load_steps=15 format=3 uid="uid://oomd48e25ihj"]
+
+[ext_resource type="Texture2D" uid="uid://npj84psdjgjx" path="res://ASSET/DADOS/r20.png" id="1_dgghj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ovsqu"]
+atlas = ExtResource("1_dgghj")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3mhqs"]
+atlas = ExtResource("1_dgghj")
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tfhnc"]
+atlas = ExtResource("1_dgghj")
+region = Rect2(1024, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hrwql"]
+atlas = ExtResource("1_dgghj")
+region = Rect2(1536, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_elt6w"]
+atlas = ExtResource("1_dgghj")
+region = Rect2(2048, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_514ip"]
+atlas = ExtResource("1_dgghj")
+region = Rect2(2560, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u0j10"]
+atlas = ExtResource("1_dgghj")
+region = Rect2(3072, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rg81o"]
+atlas = ExtResource("1_dgghj")
+region = Rect2(3584, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v1tmn"]
+atlas = ExtResource("1_dgghj")
+region = Rect2(4096, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_khmn2"]
+atlas = ExtResource("1_dgghj")
+region = Rect2(4608, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8eq42"]
+atlas = ExtResource("1_dgghj")
+region = Rect2(5120, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gq5m4"]
+atlas = ExtResource("1_dgghj")
+region = Rect2(5632, 0, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8t7s1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ovsqu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3mhqs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tfhnc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hrwql")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_elt6w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_514ip")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u0j10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rg81o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v1tmn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_khmn2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8eq42")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gq5m4")
+}],
+"loop": false,
+"name": &"LANZAMIENTO",
+"speed": 10.0
+}]
+
+[node name="DADO" type="CharacterBody2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_8t7s1")
+animation = &"LANZAMIENTO"
+flip_h = true

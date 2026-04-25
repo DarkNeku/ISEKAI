@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bxx0dnw55tghu"
-path="res://.godot/imported/mage-2-122x110.png-baf372d9e875a98aa6af80419922db99.ctex"
+uid="uid://npj84psdjgjx"
+path="res://.godot/imported/r20.png-ac492bec6d780f8a832f43285de49821.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://ASSET/BOSS/ARS/spritesheets/mage-2-122x110.png"
-dest_files=["res://.godot/imported/mage-2-122x110.png-baf372d9e875a98aa6af80419922db99.ctex"]
+source_file="res://ASSET/DADOS/r20.png"
+dest_files=["res://.godot/imported/r20.png-ac492bec6d780f8a832f43285de49821.ctex"]
 
 [params]
 

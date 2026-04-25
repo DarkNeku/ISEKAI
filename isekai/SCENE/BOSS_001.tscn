@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://b2r8purmb6grb"]
+[gd_scene load_steps=7 format=3 uid="uid://b2r8purmb6grb"]
 
 [ext_resource type="PackedScene" uid="uid://cq2d3r0eww2mw" path="res://SPRITE/BOSS_1.tscn" id="1_2nsg4"]
 [ext_resource type="Script" uid="uid://b3rwxmh12dwh8" path="res://SCRIPT/boss_001.gd" id="1_6h5nb"]
 [ext_resource type="Texture2D" uid="uid://dnr467g1fn1we" path="res://ASSET/MENUS/ICON 2.png" id="3_6xav7"]
+[ext_resource type="PackedScene" uid="uid://bqaenfjk1j6v5" path="res://SPRITE/BOSS_2.tscn" id="4_ca2tb"]
+[ext_resource type="PackedScene" uid="uid://oomd48e25ihj" path="res://SPRITE/DADO.tscn" id="5_gcqlp"]
 
 [sub_resource type="Theme" id="Theme_6xav7"]
 default_font_size = 30
@@ -27,6 +29,11 @@ grow_vertical = 2
 
 [node name="BOSS_1" parent="Panel" instance=ExtResource("1_2nsg4")]
 position = Vector2(522, 579)
+scale = Vector2(6, 6)
+
+[node name="BOSS_2" parent="Panel" instance=ExtResource("4_ca2tb")]
+visible = false
+position = Vector2(580, 360)
 scale = Vector2(6, 6)
 
 [node name="VIDA_BOSS" type="ProgressBar" parent="Panel"]
@@ -215,6 +222,11 @@ offset_right = 604.0
 offset_bottom = 476.0
 theme_override_font_sizes/font_size = 80
 text = "LISTO"
+
+[node name="DADO" parent="Panel" instance=ExtResource("5_gcqlp")]
+visible = false
+position = Vector2(550, 1000)
+scale = Vector2(2, 2)
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
 title = ""
