@@ -12,7 +12,8 @@ var lista_jugadores = []
 @onready var animated_dado = $Panel/DADO/AnimatedSprite2D
 @onready var btn_lanzar = $Panel/Control2/BTN_LANZAR
 @onready var btn_ok = $Panel/Control2/BTN_OK
-@onready var btn_dano = $Panel/Control2/BTN_DANO
+@onready var btn_dano_fisico = $Panel/Control2/BTN_DANO_FISICO
+@onready var btn_dano_especial = $Panel/Control2/BTN_DANO_ESPECIAL
 @onready var btn_directo = $Panel/Control2/BTN_DIRECTO
 @onready var btn_restar = $Panel/Control2/BTN_RESTAR
 @onready var lbl_nom_jug = $Panel/LBL_NOM_JUG
@@ -79,8 +80,10 @@ func lanzar_y_calcular_dados():
 func set_botones_activos(activo: bool):
 	if btn_ok:
 		btn_ok.disabled = !activo
-	if btn_dano:
-		btn_dano.disabled = !activo
+	if btn_dano_fisico:
+		btn_dano_fisico.disabled = !activo
+	if btn_dano_especial:
+		btn_dano_especial.disabled = !activo
 	if btn_directo:
 		btn_directo.disabled = !activo
 	if btn_restar:

@@ -56,7 +56,7 @@ text = " 1"
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 alignment = 1
-max_length = 12
+max_length = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
 layout_mode = 2

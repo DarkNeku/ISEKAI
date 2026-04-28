@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://bknhtlrtodjuj"]
+
+[ext_resource type="Texture2D" uid="uid://7ds5lbn5gyv8" path="res://ASSET/IconSet.png" id="1_xyrtd"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xyrtd"]
+atlas = ExtResource("1_xyrtd")
+region = Rect2(416, 128, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1srhc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xyrtd")
+}],
+"loop": true,
+"name": &"ICO_DIRECTO",
+"speed": 5.0
+}]
+
+[node name="ANI_DIRECTO" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_1srhc")
+animation = &"ICO_DIRECTO"
