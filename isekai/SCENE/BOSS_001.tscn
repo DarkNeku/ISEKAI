@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://b2r8purmb6grb"]
+[gd_scene load_steps=8 format=3 uid="uid://b2r8purmb6grb"]
 
 [ext_resource type="PackedScene" uid="uid://cq2d3r0eww2mw" path="res://SPRITE/BOSS_1.tscn" id="1_2nsg4"]
 [ext_resource type="Script" uid="uid://b3rwxmh12dwh8" path="res://SCRIPT/boss_001.gd" id="1_6h5nb"]
 [ext_resource type="Texture2D" uid="uid://dnr467g1fn1we" path="res://ASSET/MENUS/ICON 2.png" id="3_6xav7"]
 [ext_resource type="PackedScene" uid="uid://bqaenfjk1j6v5" path="res://SPRITE/BOSS_2.tscn" id="4_ca2tb"]
 [ext_resource type="PackedScene" uid="uid://oomd48e25ihj" path="res://SPRITE/DADO.tscn" id="5_gcqlp"]
+[ext_resource type="Script" uid="uid://cd1b5omvrmt6" path="res://SCRIPT/SISTEMA_DADOS.gd" id="5_tvpd7"]
 
 [sub_resource type="Theme" id="Theme_6xav7"]
 default_font_size = 30
@@ -64,6 +65,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 columns = 4
+script = ExtResource("5_tvpd7")
 
 [node name="Panel" type="Panel" parent="Panel/Control/GridContainer"]
 layout_mode = 2
@@ -84,7 +86,6 @@ offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 80
-text = "1"
 horizontal_alignment = 1
 
 [node name="Panel2" type="Panel" parent="Panel/Control/GridContainer"]
@@ -106,7 +107,6 @@ offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 80
-text = "2"
 horizontal_alignment = 1
 
 [node name="Panel3" type="Panel" parent="Panel/Control/GridContainer"]
@@ -128,7 +128,6 @@ offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 80
-text = "3"
 horizontal_alignment = 1
 
 [node name="Panel4" type="Panel" parent="Panel/Control/GridContainer"]
@@ -150,7 +149,6 @@ offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 80
-text = "4"
 horizontal_alignment = 1
 
 [node name="Label" type="Label" parent="Panel"]

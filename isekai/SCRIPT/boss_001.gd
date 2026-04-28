@@ -16,6 +16,7 @@ var lista_jugadores = []
 @onready var btn_directo = $Panel/Control2/BTN_DIRECTO
 @onready var btn_restar = $Panel/Control2/BTN_RESTAR
 @onready var lbl_nom_jug = $Panel/LBL_NOM_JUG
+@onready var sistema_dados = $Panel/Control/GridContainer
 
 func _ready():
 	cargar_jugadores()
@@ -34,18 +35,47 @@ func _ready():
 	if btn_ok:
 		btn_ok.pressed.connect(_on_BTN_OK_pressed)
 	
+	# NUEVO: Conectar botón DIRECTO
+	if btn_directo:
+		btn_directo.pressed.connect(_on_BTN_DIRECTO_pressed)
+		print("✅ Botón DIRECTO conectado")
+	
 	# Inicializar la primera ronda
 	indice_inicio_ronda = 0
 	indice_jugador_actual = 0
 	actualizar_nombre_jugador()
 	
-	# DESACTIVAR BOTONES AL INICIO (antes de la animación inicial)
+	# Desactivar botones al inicio
 	set_botones_activos(false)
 	
-	# Lanzar el dado al iniciar la escena
+	# Lanzar el dado al iniciar
 	lanzar_dado()
 
-# Función para activar/desactivar botones (excepto BTN_LANZAR)
+# NUEVA FUNCIÓN: Botón DIRECTO presionado
+func _on_BTN_DIRECTO_pressed():
+	print("🔘 Botón DIRECTO presionado")
+	
+	# Calcular daño basado en resultados actuales
+	if sistema_dados and sistema_dados.has_method("get_resultados_actuales"):
+		var resultados = sistema_dados.get_resultados_actuales()
+		var daño = resultados["ataf"] + resultados["atas"]
+		reducir_vida_boss(daño)
+		print("  → Daño directo: ", daño)
+	else:
+		# Si no hay sistema de dados, hacer daño fijo de 10
+		reducir_vida_boss(10)
+		print("  → Daño directo fijo: 10")
+
+func lanzar_y_calcular_dados():
+	print("🎲 Lanzando dados...")
+	if sistema_dados and sistema_dados.has_method("lanzar_todos_los_dados"):
+		var resultados = sistema_dados.lanzar_todos_los_dados(cantidad_jugadores)
+		print("📊 Resultados: ", resultados)
+		return resultados
+	else:
+		print("❌ Sistema de dados no disponible")
+		return null
+
 func set_botones_activos(activo: bool):
 	if btn_ok:
 		btn_ok.disabled = !activo
@@ -55,9 +85,7 @@ func set_botones_activos(activo: bool):
 		btn_directo.disabled = !activo
 	if btn_restar:
 		btn_restar.disabled = !activo
-	
-	var estado = "ACTIVOS" if activo else "DESACTIVADOS"
-	print("🔘 Botones ", estado)
+	print("🔘 Botones: ", "ACTIVOS" if activo else "DESACTIVADOS")
 
 func cargar_jugadores():
 	var ruta = "user://" + "jugadores.json"
@@ -100,12 +128,11 @@ func _on_BTN_OK_pressed():
 	indice_jugador_actual += 1
 	contador_ok += 1
 	
-	print("  → OK presionados en esta ronda: ", contador_ok, "/", cantidad_jugadores)
+	print("  → OK: ", contador_ok, "/", cantidad_jugadores)
 	
 	if indice_jugador_actual >= cantidad_jugadores:
-		print("🎉 ¡Ronda completa! Mostrando botón LANZAR")
+		print("🎉 Ronda completa! Mostrando LANZAR")
 		btn_lanzar.visible = true
-		# DESACTIVAR BOTONES CUANDO APARECE BTN_LANZAR
 		set_botones_activos(false)
 	else:
 		actualizar_nombre_jugador()
@@ -115,23 +142,25 @@ func _on_BTN_LANZAR_pressed():
 	
 	btn_lanzar.visible = false
 	
-	# Avanzar el inicio de la ronda
 	indice_inicio_ronda += 1
 	if indice_inicio_ronda >= cantidad_jugadores:
 		indice_inicio_ronda = 0
 	
-	# Resetear para la nueva ronda
 	indice_jugador_actual = 0
 	contador_ok = 0
 	
 	actualizar_nombre_jugador()
 	
-	# Los botones se reactivarán cuando termine la animación
+	# NUEVO: Calcular daño antes de lanzar? (opcional)
+	# Si quieres que también haga daño al lanzar, descomenta:
+	# _on_BTN_DIRECTO_pressed()
+	
 	lanzar_dado()
 	
-	print("  → Nueva ronda. Inicia con: ", obtener_nombre_rotado(0))
+	print("  → Nueva ronda con: ", obtener_nombre_rotado(0))
 
 func lanzar_dado():
+	lanzar_y_calcular_dados()
 	dado.visible = true
 	animated_dado.play("LANZAMIENTO")
 	print("🎲 Dado lanzado")
@@ -139,14 +168,11 @@ func lanzar_dado():
 func _on_dado_animation_finished():
 	if animated_dado.animation == "LANZAMIENTO":
 		dado.visible = false
-		print("🎲 Animación terminada, dado oculto")
-		
-		# REACTIVAR BOTONES CUANDO TERMINA LA ANIMACIÓN
+		print("🎲 Animación terminada")
 		set_botones_activos(true)
 
 func configurar_barra_vida():
 	var barra = $Panel/VIDA_BOSS
-	
 	barra.max_value = 100
 	barra.min_value = 0
 	barra.value = 100
@@ -177,11 +203,13 @@ func configurar_barra_vida():
 func reducir_vida_boss(cantidad):
 	var barra = $Panel/VIDA_BOSS
 	barra.value = max(0, barra.value - cantidad)
-	print("Vida del BOSS: ", barra.value, "%")
+	print("💥 BOSS recibe ", cantidad, " de daño")
+	print("  ❤️ Vida restante: ", barra.value, "%")
 	
 	if barra.value <= 0:
 		print("💀 BOSS DERROTADO 💀")
+		# Aquí puedes agregar lo que pase cuando el boss muere
 
 func _process(delta):
-	if Input.is_action_just_pressed("ui_accept"):
-		reducir_vida_boss(10)
+	# Tecla ESPACIO ya no hace daño, ahora solo BTN_DIRECTO
+	pass
