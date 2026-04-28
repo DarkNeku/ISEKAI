@@ -3,13 +3,29 @@ extends Control
 var contador = 1
 const MAX = 6
 const MIN = 1
+const MINIMO_JUGADORES = 3
 const NOMBRE_ARCHIVO = "jugadores.json"
 
-@onready var dialogo = $Panel/CONFIRMAR  # Ruta corregida
+@onready var dialogo = $Panel/CONFIRMAR
+@onready var btn_listo = null  # Lo vamos a buscar
 
 func _ready():
 	print("✅ Script listo para Android")
 	print("📁 Ruta Android: ", OS.get_user_data_dir())
+	
+	# Buscar el botón LISTO dentro de CONT_LISTO_VOLVER
+	var contenedor = $Panel/CONT_LISTO_VOLVER
+	if contenedor:
+		for hijo in contenedor.get_children():
+			if hijo is Button:
+				btn_listo = hijo
+				print("✅ Botón LISTO encontrado: ", hijo.name)
+				break
+	
+	if btn_listo:
+		actualizar_boton_listo()
+	else:
+		print("❌ No se encontró el botón LISTO")
 	
 	# Verificar si el diálogo existe
 	if dialogo:
@@ -30,6 +46,8 @@ func _on_AGREGAR_pressed():
 	
 	$Panel/LISTA_JUGADORES.add_child(nuevo)
 	print("✅ Jugador #", contador)
+	
+	actualizar_boton_listo()
 
 func _on_BORRAR_pressed():
 	if contador <= MIN:
@@ -43,10 +61,37 @@ func _on_BORRAR_pressed():
 			contador -= 1
 			print("🗑️ Jugador borrado. Quedan: ", contador)
 			break
+	
+	actualizar_boton_listo()
 
 func _on_LISTO_pressed():
+	if contador < MINIMO_JUGADORES:
+		print("⚠️ Necesitas al menos ", MINIMO_JUGADORES, " jugadores. Actualmente: ", contador)
+		mostrar_advertencia()
+		return
+	
 	if dialogo:
 		dialogo.popup_centered()
+
+func actualizar_boton_listo():
+	if btn_listo:
+		if contador < MINIMO_JUGADORES:
+			btn_listo.disabled = true
+			btn_listo.modulate = Color(0.5, 0.5, 0.5)
+			print("🔒 Botón LISTO deshabilitado. Faltan ", MINIMO_JUGADORES - contador, " jugador(es)")
+		else:
+			btn_listo.disabled = false
+			btn_listo.modulate = Color(1, 1, 1)
+			print("🔓 Botón LISTO habilitado")
+
+func mostrar_advertencia():
+	var advertencia = AcceptDialog.new()
+	advertencia.title = "⚠️ Atención"
+	advertencia.dialog_text = "Necesitas al menos " + str(MINIMO_JUGADORES) + " jugadores para continuar.\nActualmente tienes: " + str(contador)
+	advertencia.ok_button_text = "Entendido"
+	advertencia.min_size = Vector2(400, 200)
+	add_child(advertencia)
+	advertencia.popup_centered()
 
 func _on_CONFIRMAR_confirmed():
 	print("✅ Usuario confirmó")

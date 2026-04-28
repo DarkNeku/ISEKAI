@@ -70,7 +70,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="Panel/Control/GridContainer/Panel"]
+[node name="LBL_ATAF" type="Label" parent="Panel/Control/GridContainer/Panel"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -92,7 +92,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="Panel/Control/GridContainer/Panel2"]
+[node name="LBL_ATAS" type="Label" parent="Panel/Control/GridContainer/Panel2"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -114,7 +114,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="Panel/Control/GridContainer/Panel3"]
+[node name="LBL_DEFF" type="Label" parent="Panel/Control/GridContainer/Panel3"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -136,7 +136,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="Panel/Control/GridContainer/Panel4"]
+[node name="LBL_DEFS" type="Label" parent="Panel/Control/GridContainer/Panel4"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -162,7 +162,7 @@ offset_bottom = 1248.0
 theme_override_font_sizes/font_size = 50
 text = "TU TURNO"
 
-[node name="Label2" type="Label" parent="Panel"]
+[node name="LBL_NOM_JUG" type="Label" parent="Panel"]
 layout_mode = 0
 offset_left = 283.0
 offset_top = 1227.0
@@ -177,7 +177,7 @@ offset_top = 1361.0
 offset_right = 1040.0
 offset_bottom = 1852.0
 
-[node name="Button" type="Button" parent="Panel/Control2"]
+[node name="BTN_DANO" type="Button" parent="Panel/Control2"]
 layout_mode = 0
 offset_left = 337.0
 offset_top = -13.0
@@ -186,7 +186,7 @@ offset_bottom = 132.0
 theme_override_font_sizes/font_size = 100
 text = "DAÑO"
 
-[node name="Button5" type="Button" parent="Panel/Control2"]
+[node name="BTN_DIRECTO" type="Button" parent="Panel/Control2"]
 layout_mode = 0
 offset_left = -19.0
 offset_top = 170.0
@@ -195,8 +195,7 @@ offset_bottom = 315.0
 theme_override_font_sizes/font_size = 100
 text = "DIRECTO"
 
-[node name="Button2" type="Button" parent="Panel/Control2"]
-visible = false
+[node name="BTN_LANZAR" type="Button" parent="Panel/Control2"]
 layout_mode = 0
 offset_left = 201.0
 offset_top = 123.0
@@ -205,7 +204,7 @@ offset_bottom = 336.0
 theme_override_font_sizes/font_size = 150
 text = "LANZAR"
 
-[node name="Button3" type="Button" parent="Panel/Control2"]
+[node name="BTN_RESTAR" type="Button" parent="Panel/Control2"]
 layout_mode = 0
 offset_left = 698.0
 offset_top = 260.0
@@ -214,14 +213,14 @@ offset_bottom = 378.0
 theme_override_font_sizes/font_size = 80
 text = "RESTAR"
 
-[node name="Button4" type="Button" parent="Panel/Control2"]
+[node name="BTN_OK" type="Button" parent="Panel/Control2"]
 layout_mode = 0
 offset_left = 307.0
 offset_top = 358.0
 offset_right = 604.0
 offset_bottom = 476.0
 theme_override_font_sizes/font_size = 80
-text = "LISTO"
+text = "OK"
 
 [node name="DADO" parent="Panel" instance=ExtResource("5_gcqlp")]
 visible = false
