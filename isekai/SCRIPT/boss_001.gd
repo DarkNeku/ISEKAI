@@ -11,7 +11,7 @@ var lista_jugadores = []
 var contador_fisico = 0
 var contador_especial = 0
 var contador_directo = 0
-var historial_golpes = []  # Historial de golpes
+var historial_golpes = []
 
 # Nodos
 @onready var dado = $Panel/DADO
@@ -24,6 +24,7 @@ var historial_golpes = []  # Historial de golpes
 @onready var btn_restar = $Panel/Control2/BTN_RESTAR
 @onready var lbl_nom_jug = $Panel/Control3/LBL_NOM_JUG
 @onready var sistema_dados = $Panel/Control/GridContainer
+@onready var combate = $COMBATE_BOSS_001
 
 # Labels de contadores
 @onready var lbl_fisico = $Panel/CONTROL_DANO/GridContainer/Panel_FISICO/LBL_FISICO
@@ -32,6 +33,15 @@ var historial_golpes = []  # Historial de golpes
 
 func _ready():
 	cargar_jugadores()
+	
+	# Inicializar sistema de combate
+	combate.inicializar(
+		$Panel/Control/GridContainer/Panel3/LBL_DEFF,
+		$Panel/Control/GridContainer/Panel3/LBL_DEFF_2,
+		$Panel/Control/GridContainer/Panel4/LBL_DEFS,
+		$Panel/Control/GridContainer/Panel4/LBL_DEFS_2,
+		$Panel/VIDA_BOSS
+	)
 	
 	reproducir_animacion_si_existe($Panel/BOSS_1/AnimatedSprite2D, "QUIETO", "BOSS_1")
 	reproducir_animacion_si_existe($Panel/BOSS_2/AnimatedSprite2D, "QUIETO", "BOSS_2")
@@ -151,13 +161,7 @@ func _on_BTN_DIRECTO_pressed():
 	contador_directo += 1
 	historial_golpes.append("directo")
 	actualizar_contadores_ui()
-	
-	if sistema_dados and sistema_dados.has_method("get_resultados_actuales"):
-		var resultados = sistema_dados.get_resultados_actuales()
-		var daño = resultados.get("ataf", 0) + resultados.get("atas", 0)
-		reducir_vida_boss(daño)
-	else:
-		reducir_vida_boss(10)
+	# ELIMINÉ el daño inmediato, ahora se acumula
 
 func _on_BTN_RESTAR_pressed():
 	print("🔘 Botón RESTAR presionado")
@@ -186,6 +190,10 @@ func lanzar_y_calcular_dados():
 	if sistema_dados and sistema_dados.has_method("lanzar_todos_los_dados"):
 		var resultados = sistema_dados.lanzar_todos_los_dados(cantidad_jugadores)
 		print("📊 Resultados: ", resultados)
+		
+		if combate:
+			combate.actualizar_escudos_con_dados(resultados.get("deff", 0), resultados.get("defs", 0))
+		
 		return resultados
 	else:
 		print("❌ Sistema de dados no disponible")
@@ -234,8 +242,21 @@ func _on_BTN_OK_pressed():
 	print("     Especial: ", contador_especial)
 	print("     Directo: ", contador_directo)
 	
+	# Calcular daño de cada tipo
+	var daño_fisico = combate.calcular_daño_fisico(contador_fisico)
+	var daño_especial = combate.calcular_daño_especial(contador_especial)
+	var daño_directo = combate.calcular_daño_directo(contador_directo)
+	
+	var daño_total = daño_fisico + daño_especial + daño_directo
+	print("  → Daño TOTAL: ", daño_total)
+	
+	if daño_total > 0:
+		combate.aplicar_daño_a_vida(daño_total)
+	
+	# Reiniciar contadores
 	reiniciar_contadores()
 	
+	# Cambiar de jugador
 	indice_jugador_actual += 1
 	contador_ok += 1
 	
@@ -262,6 +283,9 @@ func _on_BTN_LANZAR_pressed():
 	contador_ok = 0
 	
 	actualizar_nombre_jugador()
+	
+	if combate:
+		combate.reiniciar_escudos()
 	
 	lanzar_dado()
 	
@@ -320,17 +344,6 @@ func configurar_barra_vida():
 	barra.add_theme_stylebox_override("background", estilo_fondo)
 	
 	barra.show_percentage = false
-
-func reducir_vida_boss(cantidad):
-	var barra = $Panel/VIDA_BOSS
-	if not barra:
-		return
-	barra.value = max(0, barra.value - cantidad)
-	print("💥 BOSS recibe ", cantidad, " de daño")
-	print("  ❤️ Vida restante: ", barra.value, "%")
-	
-	if barra.value <= 0:
-		print("💀 BOSS DERROTADO 💀")
 
 func _process(_delta):
 	pass

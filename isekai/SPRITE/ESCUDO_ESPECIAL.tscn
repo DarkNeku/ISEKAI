@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://b724176mpcea7"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nsw7m"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"ANI_ESCUDO_ESPECIAL",
+"speed": 5.0
+}]
+
+[node name="ESCUDO_ESPECIAL" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_nsw7m")
+animation = &"ANI_ESCUDO_ESPECIAL"

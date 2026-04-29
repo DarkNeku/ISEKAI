@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://b2r8purmb6grb"]
+[gd_scene load_steps=26 format=3 uid="uid://b2r8purmb6grb"]
 
 [ext_resource type="PackedScene" uid="uid://cq2d3r0eww2mw" path="res://SPRITE/BOSS_1.tscn" id="1_2nsg4"]
 [ext_resource type="Script" uid="uid://b3rwxmh12dwh8" path="res://SCRIPT/boss_001.gd" id="1_6h5nb"]
@@ -13,6 +13,9 @@
 [ext_resource type="Texture2D" uid="uid://cqhvkd5p85t8a" path="res://ASSET/ButtonSet.png" id="7_sqvus"]
 [ext_resource type="Texture2D" uid="uid://2eufsu7ftktk" path="res://ASSET/image-removebg-preview.png" id="8_ggrp2"]
 [ext_resource type="PackedScene" uid="uid://bknhtlrtodjuj" path="res://SPRITE/ANI_DIRECTO.tscn" id="8_j7e2v"]
+[ext_resource type="Script" uid="uid://c84ab47ekf1n1" path="res://SCRIPT/COMBATE_BOSS_001.gd" id="14_adh1r"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_adh1r"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sqvus"]
 texture = ExtResource("6_qukbu")
@@ -118,12 +121,15 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -40.0
+offset_left = -107.0
 offset_top = -55.0
+offset_right = -7.0
 offset_bottom = 55.0
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.765329, 0.945268, 7.70092e-07, 1)
 theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("StyleBoxEmpty_adh1r")
 horizontal_alignment = 1
 
 [node name="LBL_ATAF_2" type="Label" parent="Panel/Control/GridContainer/Panel"]
@@ -132,9 +138,10 @@ anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_top = -55.0
-offset_right = 40.0
+offset_right = 100.0
 offset_bottom = 55.0
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.815057, 0, 0, 1)
 theme_override_font_sizes/font_size = 80
 horizontal_alignment = 1
 
@@ -166,11 +173,13 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -40.0
+offset_left = -107.0
 offset_top = -55.0
+offset_right = -7.0
 offset_bottom = 55.0
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.764706, 0.945098, 0, 1)
 theme_override_font_sizes/font_size = 80
 horizontal_alignment = 1
 
@@ -180,9 +189,10 @@ anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_top = -55.0
-offset_right = 40.0
+offset_right = 100.0
 offset_bottom = 55.0
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.815686, 0, 0, 1)
 theme_override_font_sizes/font_size = 80
 horizontal_alignment = 1
 
@@ -214,11 +224,13 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -40.0
+offset_left = -107.0
 offset_top = -55.0
+offset_right = -7.0
 offset_bottom = 55.0
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.764706, 0.945098, 0, 1)
 theme_override_font_sizes/font_size = 80
 horizontal_alignment = 1
 
@@ -227,10 +239,12 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
+offset_left = 9.0
 offset_top = -55.0
-offset_right = 40.0
+offset_right = 109.0
 offset_bottom = 55.0
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.815686, 0, 0, 1)
 theme_override_font_sizes/font_size = 80
 horizontal_alignment = 1
 
@@ -262,11 +276,13 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -40.0
+offset_left = -106.0
 offset_top = -55.0
+offset_right = -6.0
 offset_bottom = 55.0
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.764706, 0.945098, 0, 1)
 theme_override_font_sizes/font_size = 80
 horizontal_alignment = 1
 
@@ -276,9 +292,10 @@ anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
 offset_top = -55.0
-offset_right = 40.0
+offset_right = 100.0
 offset_bottom = 55.0
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.815686, 0, 0, 1)
 theme_override_font_sizes/font_size = 80
 horizontal_alignment = 1
 
@@ -513,3 +530,6 @@ theme = SubResource("Theme_6xav7")
 dialog_text = "¿ESTAS SEGURO QUE QUIERES 
 APLICAR ESTE DAÑO?"
 cancel_button_text = "NO"
+
+[node name="COMBATE_BOSS_001" type="Node" parent="."]
+script = ExtResource("14_adh1r")
