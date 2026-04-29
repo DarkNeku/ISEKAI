@@ -8,6 +8,7 @@ var escudo_fisico_base: int = 0
 var escudo_fisico_actual: int = 0
 var escudo_especial_base: int = 0
 var escudo_especial_actual: int = 0
+var boss_muerto: bool = false  # ← NUEVA: control de muerte
 
 # ============================================
 # REFERENCIAS A NODOS
@@ -45,12 +46,16 @@ func inicializar(
 	ani_escudo_fisico = _ani_escudo_fisico
 	ani_escudo_especial = _ani_escudo_especial
 	boss_1 = _boss_1
+	boss_muerto = false
 	print("✅ Sistema de combate inicializado")
 
 # ============================================
 # ACTUALIZAR ESCUDOS CON NUEVOS DADOS
 # ============================================
 func actualizar_escudos_con_dados(nuevo_fisico: int, nuevo_especial: int):
+	if boss_muerto:
+		return
+	
 	escudo_fisico_base = nuevo_fisico
 	escudo_fisico_actual = nuevo_fisico
 	escudo_especial_base = nuevo_especial
@@ -80,7 +85,7 @@ func actualizar_ui_escudo_especial():
 # CÁLCULOS DE DAÑO
 # ============================================
 func calcular_daño_fisico(golpes: int) -> int:
-	if golpes <= 0:
+	if boss_muerto or golpes <= 0:
 		return 0
 	
 	if escudo_fisico_actual <= 0:
@@ -100,7 +105,7 @@ func calcular_daño_fisico(golpes: int) -> int:
 		return daño_extra
 
 func calcular_daño_especial(golpes: int) -> int:
-	if golpes <= 0:
+	if boss_muerto or golpes <= 0:
 		return 0
 	
 	if escudo_especial_actual <= 0:
@@ -120,9 +125,14 @@ func calcular_daño_especial(golpes: int) -> int:
 		return daño_extra
 
 func calcular_daño_directo(golpes: int) -> int:
+	if boss_muerto:
+		return 0
 	return golpes
 
 func aplicar_golpe_fisico() -> int:
+	if boss_muerto:
+		return 0
+	
 	if escudo_fisico_actual <= 0:
 		return 1
 	
@@ -134,6 +144,9 @@ func aplicar_golpe_fisico() -> int:
 	return 0
 
 func aplicar_golpe_especial() -> int:
+	if boss_muerto:
+		return 0
+	
 	if escudo_especial_actual <= 0:
 		return 1
 	
@@ -145,7 +158,7 @@ func aplicar_golpe_especial() -> int:
 	return 0
 
 func aplicar_daño_a_vida(cantidad: int) -> int:
-	if not barra_vida or cantidad <= 0:
+	if boss_muerto or not barra_vida or cantidad <= 0:
 		return 0
 	
 	var vida_anterior = barra_vida.value
@@ -153,8 +166,9 @@ func aplicar_daño_a_vida(cantidad: int) -> int:
 	barra_vida.value = vida_nueva
 	print("💥 Daño a vida: ", cantidad, " | Vida restante: ", vida_nueva)
 	
-	# Si la vida llegó a 0 y antes había vida, activar muerte
+	# Si la vida llegó a 0 y antes había vida, activar muerte y bloquear daño futuro
 	if vida_nueva <= 0 and vida_anterior > 0:
+		boss_muerto = true
 		_muerte_boss()
 	
 	return vida_nueva
@@ -162,12 +176,27 @@ func aplicar_daño_a_vida(cantidad: int) -> int:
 func _muerte_boss():
 	print("💀 BOSS DERROTADO - Reproduciendo MUERTE")
 	if boss_1 and boss_1.sprite_frames and boss_1.sprite_frames.has_animation("MUERTE"):
+		# Conectar señal de fin de animación
+		if not boss_1.animation_finished.is_connected(_on_muerte_animation_finished):
+			boss_1.animation_finished.connect(_on_muerte_animation_finished)
 		boss_1.play("MUERTE")
-		# Opcional: detener otras animaciones si es necesario
 	else:
 		print("❌ Animación MUERTE no encontrada en BOSS_1")
+		boss_1.visible = false
 
+func _on_muerte_animation_finished():
+	if boss_1 and boss_1.animation == "MUERTE":
+		print("💀 Animación de muerte terminada, ocultando BOSS_1")
+		boss_1.visible = false
+		# Desconectar la señal para evitar que se ejecute múltiples veces
+		if boss_1.animation_finished.is_connected(_on_muerte_animation_finished):
+			boss_1.animation_finished.disconnect(_on_muerte_animation_finished)
+			
+			
 func reiniciar_escudos():
+	if boss_muerto:
+		return
+	
 	escudo_fisico_actual = escudo_fisico_base
 	escudo_especial_actual = escudo_especial_base
 	actualizar_ui_escudo_fisico()
@@ -178,6 +207,9 @@ func get_escudo_fisico_actual() -> int:
 
 func get_escudo_especial_actual() -> int:
 	return escudo_especial_actual
+
+func is_boss_muerto() -> bool:
+	return boss_muerto
 
 # ============================================
 # FUNCIONES DE ANIMACIÓN (1 segundo cada animación)
@@ -236,22 +268,33 @@ func _golpe_directo():
 
 # ========== ANIMACIONES COMUNES ==========
 func _hit_boss():
+	if boss_muerto:
+		return
 	if boss_1 and boss_1.sprite_frames and boss_1.sprite_frames.has_animation("HIT"):
 		print("  ➤ BOSS recibe HIT")
 		boss_1.play("HIT")
 		await get_tree().create_timer(1.0).timeout
-		boss_1.play("QUIETO")
-
+		# Solo volver a QUIETO si NO está muerto
+		if not boss_muerto:
+			boss_1.play("QUIETO")
+			
 # ============================================
-# SECUENCIAS COMPLETAS (2 segundos entre golpes)
+# SECUENCIAS COMPLETAS
 # ============================================
 
 # SECUENCIA FÍSICA
 func ejecutar_daño_fisico(cantidad_golpes: int):
+	if boss_muerto:
+		print("⚠️ Boss ya está muerto, no se ejecuta daño físico")
+		return
+	
 	print("🎬 ===== INICIO SECUENCIA GOLPES FÍSICOS =====")
 	print("🔢 Cantidad de golpes: ", cantidad_golpes)
 	
 	for i in range(cantidad_golpes):
+		if boss_muerto:
+			break
+		
 		print("")
 		print("  🔹 Golpe FÍSICO ", i + 1, " de ", cantidad_golpes)
 		
@@ -270,17 +313,19 @@ func ejecutar_daño_fisico(cantidad_golpes: int):
 				_escudo_fisico_activo()
 			await get_tree().create_timer(0.2).timeout
 			
-			if daño_vida > 0:
+			if daño_vida > 0 and not boss_muerto:
 				_hit_boss()
 				await get_tree().create_timer(0.2).timeout
 		else:
 			_golpe_fisico(false)
 			await get_tree().create_timer(0.2).timeout
-			_hit_boss()
+			if not boss_muerto:
+				_hit_boss()
 			await get_tree().create_timer(0.2).timeout
-			aplicar_daño_a_vida(1)
+			if not boss_muerto:
+				aplicar_daño_a_vida(1)
 		
-		if i < cantidad_golpes - 1:
+		if i < cantidad_golpes - 1 and not boss_muerto:
 			print("  ⏱️ Esperando 2 segundos entre golpes...")
 			await get_tree().create_timer(0.8).timeout
 	
@@ -288,10 +333,17 @@ func ejecutar_daño_fisico(cantidad_golpes: int):
 
 # SECUENCIA ESPECIAL
 func ejecutar_daño_especial(cantidad_golpes: int):
+	if boss_muerto:
+		print("⚠️ Boss ya está muerto, no se ejecuta daño especial")
+		return
+	
 	print("🎬 ===== INICIO SECUENCIA GOLPES ESPECIALES =====")
 	print("🔢 Cantidad de golpes: ", cantidad_golpes)
 	
 	for i in range(cantidad_golpes):
+		if boss_muerto:
+			break
+		
 		print("")
 		print("  🔹 Golpe ESPECIAL ", i + 1, " de ", cantidad_golpes)
 		
@@ -310,17 +362,19 @@ func ejecutar_daño_especial(cantidad_golpes: int):
 				_escudo_especial_activo()
 			await get_tree().create_timer(0.2).timeout
 			
-			if daño_vida > 0:
+			if daño_vida > 0 and not boss_muerto:
 				_hit_boss()
 				await get_tree().create_timer(0.2).timeout
 		else:
 			_golpe_especial(false)
 			await get_tree().create_timer(0.2).timeout
-			_hit_boss()
+			if not boss_muerto:
+				_hit_boss()
 			await get_tree().create_timer(0.2).timeout
-			aplicar_daño_a_vida(1)
+			if not boss_muerto:
+				aplicar_daño_a_vida(1)
 		
-		if i < cantidad_golpes - 1:
+		if i < cantidad_golpes - 1 and not boss_muerto:
 			print("  ⏱️ Esperando 2 segundos entre golpes...")
 			await get_tree().create_timer(0.8).timeout
 	
@@ -328,27 +382,36 @@ func ejecutar_daño_especial(cantidad_golpes: int):
 
 # SECUENCIA DIRECTA
 func ejecutar_daño_directo(cantidad_golpes: int):
+	if boss_muerto:
+		print("⚠️ Boss ya está muerto, no se ejecuta daño directo")
+		return
+	
 	print("🎬 ===== INICIO SECUENCIA GOLPES DIRECTOS =====")
 	print("🔢 Cantidad de golpes: ", cantidad_golpes)
 	
 	var ambos_escudos_rotos = (escudo_fisico_actual <= 0 and escudo_especial_actual <= 0)
-	var daño_por_golpe = 2 if ambos_escudos_rotos else 1
+	var daño_por_golpe = 10 if ambos_escudos_rotos else 5
 	
 	print("  🛡️ Escudo Físico: ", escudo_fisico_actual)
 	print("  🛡️ Escudo Especial: ", escudo_especial_actual)
 	print("  💥 Daño por golpe: ", daño_por_golpe, " (", "DOBLE" if ambos_escudos_rotos else "NORMAL", ")")
 	
 	for i in range(cantidad_golpes):
+		if boss_muerto:
+			break
+		
 		print("")
 		print("  🔹 Golpe DIRECTO ", i + 1, " de ", cantidad_golpes)
 		
 		_golpe_directo()
 		await get_tree().create_timer(0.2).timeout
-		_hit_boss()
+		if not boss_muerto:
+			_hit_boss()
 		await get_tree().create_timer(0.2).timeout
-		aplicar_daño_a_vida(daño_por_golpe)
+		if not boss_muerto:
+			aplicar_daño_a_vida(daño_por_golpe)
 		
-		if i < cantidad_golpes - 1:
+		if i < cantidad_golpes - 1 and not boss_muerto:
 			print("  ⏱️ Esperando 2 segundos entre golpes...")
 			await get_tree().create_timer(0.8).timeout
 	

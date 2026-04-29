@@ -118,21 +118,29 @@ func set_botones_activos(activo: bool):
 			btn.disabled = !activo
 
 func _on_BTN_DANO_FISICO_pressed():
+	if combate.is_boss_muerto():
+		return
 	contador_fisico += 1
 	historial_golpes.append("fisico")
 	actualizar_contadores_ui()
 
 func _on_BTN_DANO_ESPECIAL_pressed():
+	if combate.is_boss_muerto():
+		return
 	contador_especial += 1
 	historial_golpes.append("especial")
 	actualizar_contadores_ui()
 
 func _on_BTN_DIRECTO_pressed():
+	if combate.is_boss_muerto():
+		return
 	contador_directo += 1
 	historial_golpes.append("directo")
 	actualizar_contadores_ui()
 
 func _on_BTN_RESTAR_pressed():
+	if combate.is_boss_muerto():
+		return
 	if historial_golpes.is_empty():
 		return
 	var ultimo = historial_golpes.pop_back()
@@ -143,6 +151,9 @@ func _on_BTN_RESTAR_pressed():
 	actualizar_contadores_ui()
 
 func lanzar_y_calcular_dados():
+	if combate.is_boss_muerto():
+		return null
+	
 	if sistema_dados and sistema_dados.has_method("lanzar_todos_los_dados"):
 		var resultados = sistema_dados.lanzar_todos_los_dados(cantidad_jugadores)
 		combate.actualizar_escudos_con_dados(resultados.get("deff", 0), resultados.get("defs", 0))
@@ -176,6 +187,10 @@ func actualizar_nombre_jugador():
 		lbl_nom_jug.text = obtener_nombre_rotado(indice_jugador_actual)
 
 func _on_BTN_OK_pressed():
+	if combate.is_boss_muerto():
+		print("⚠️ Boss ya está muerto, no se puede atacar")
+		return
+	
 	# Guardar valores actuales de escudos
 	var escudo_fisico_actual = combate.get_escudo_fisico_actual()
 	var escudo_especial_actual = combate.get_escudo_especial_actual()
@@ -235,6 +250,9 @@ func _on_BTN_OK_pressed():
 		actualizar_nombre_jugador()
 
 func _on_BTN_LANZAR_pressed():
+	if combate.is_boss_muerto():
+		return
+	
 	btn_lanzar.visible = false
 	indice_inicio_ronda = (indice_inicio_ronda + 1) % cantidad_jugadores
 	indice_jugador_actual = 0
@@ -252,14 +270,26 @@ func lanzar_dado():
 func _on_dado_animation_finished():
 	if animated_dado.animation == "LANZAMIENTO":
 		dado.visible = false
+		
+		# Si el boss ya está muerto, no hacer nada más
+		if combate.is_boss_muerto():
+			set_botones_activos(false)
+			set_botones_visibles(false)
+			btn_lanzar.visible = false
+			return
+		
 		$Panel/BOSS_1/AnimatedSprite2D.play("ATAQUE")
 		$Panel/BOSS_2/AnimatedSprite2D.play("ATAQUE")
 		await get_tree().create_timer(0.7).timeout
-		$Panel/BOSS_1/AnimatedSprite2D.play("QUIETO")
-		$Panel/BOSS_2/AnimatedSprite2D.play("QUIETO")
+		
+		# Verificar nuevamente antes de volver a QUIETO
+		if not combate.is_boss_muerto():
+			$Panel/BOSS_1/AnimatedSprite2D.play("QUIETO")
+			$Panel/BOSS_2/AnimatedSprite2D.play("QUIETO")
+		
 		set_botones_activos(true)
 		set_botones_visibles(true)
-
+		
 func configurar_barra_vida():
 	var barra = $Panel/VIDA_BOSS
 	barra.max_value = 100
@@ -295,11 +325,14 @@ func configurar_barra_vida():
 # Señal para detectar cuando la vida cambia
 func _on_vida_cambiada(nuevo_valor: float):
 	if nuevo_valor <= 0:
-		print("💀 BOSS DERROTADO - Activando animación de MUERTE desde señal")
+		print("💀 BOSS DERROTADO - Deshabilitando todo")
+		# Solo reproducir muerte, nada más
 		$Panel/BOSS_1/AnimatedSprite2D.play("MUERTE")
-		# Deshabilitar botones al morir
+		# Deshabilitar botones
 		set_botones_activos(false)
 		set_botones_visibles(false)
-
+		btn_lanzar.visible = false
+		# No hacer nada más que pueda interrumpir la animación
+		
 func _process(_delta):
 	pass
