@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://b2r8purmb6grb"]
+[gd_scene load_steps=31 format=3 uid="uid://b2r8purmb6grb"]
 
 [ext_resource type="PackedScene" uid="uid://cq2d3r0eww2mw" path="res://SPRITE/BOSS_1.tscn" id="1_2nsg4"]
 [ext_resource type="Script" uid="uid://b3rwxmh12dwh8" path="res://SCRIPT/boss_001.gd" id="1_6h5nb"]
@@ -14,6 +14,11 @@
 [ext_resource type="Texture2D" uid="uid://2eufsu7ftktk" path="res://ASSET/image-removebg-preview.png" id="8_ggrp2"]
 [ext_resource type="PackedScene" uid="uid://bknhtlrtodjuj" path="res://SPRITE/ANI_DIRECTO.tscn" id="8_j7e2v"]
 [ext_resource type="Script" uid="uid://c84ab47ekf1n1" path="res://SCRIPT/COMBATE_BOSS_001.gd" id="14_adh1r"]
+[ext_resource type="PackedScene" uid="uid://cuil0nh0q4fth" path="res://SPRITE/GOLPE_FISICO.tscn" id="14_ncoyd"]
+[ext_resource type="PackedScene" uid="uid://bhjiyra0j5i8" path="res://SPRITE/ESCUDO_FISICO.tscn" id="15_xui88"]
+[ext_resource type="PackedScene" uid="uid://c57ah0u2k23hr" path="res://SPRITE/GOLPE_ESPECIAL.tscn" id="16_xui88"]
+[ext_resource type="PackedScene" uid="uid://b724176mpcea7" path="res://SPRITE/ESCUDO_ESPECIAL.tscn" id="17_kr143"]
+[ext_resource type="PackedScene" uid="uid://btxm0j6r01huc" path="res://SPRITE/GOLPE_DIRECTO.tscn" id="18_4ltd2"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_adh1r"]
 
@@ -521,6 +526,35 @@ scale = Vector2(2, 2)
 visible = false
 position = Vector2(540, 1100)
 scale = Vector2(2, 2)
+
+[node name="GOLPE_FISICO" parent="Panel" instance=ExtResource("14_ncoyd")]
+position = Vector2(794, 624)
+scale = Vector2(2, 2)
+frame_progress = 0.0
+
+[node name="ESCUDO_FISICO" parent="Panel" instance=ExtResource("15_xui88")]
+modulate = Color(1, 1, 1, 0.196078)
+position = Vector2(514, 593)
+scale = Vector2(3.045, 3.045)
+frame = 22
+
+[node name="GOLPE_ESPECIAL" parent="Panel" instance=ExtResource("16_xui88")]
+position = Vector2(800, 649.985)
+scale = Vector2(1.5, 1.5)
+frame = 0
+frame_progress = 0.0
+
+[node name="ESCUDO_ESPECIAL" parent="Panel" instance=ExtResource("17_kr143")]
+position = Vector2(531, 585)
+scale = Vector2(3, 3)
+animation = &"ANI_ESCUDO_ESPECIAL_ACTIVO"
+frame = 10
+
+[node name="GOLPE_DIRECTO" parent="Panel" instance=ExtResource("18_4ltd2")]
+position = Vector2(539, 640)
+scale = Vector2(2.95, 2.95)
+frame = 7
+speed_scale = 0.0
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
 title = ""

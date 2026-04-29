@@ -331,7 +331,7 @@ animations = [{
 "speed": 15.0
 }]
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D"]
+[node name="GOLPE_ESPECIAL" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_ihf17")
 animation = &"ANI_GOLPE_ESPECIAL"
 frame = 14

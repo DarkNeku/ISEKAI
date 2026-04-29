@@ -151,7 +151,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_nu1yp")
 }],
 "loop": false,
-"name": &"DAÑO",
+"name": &"HIT",
 "speed": 7.0
 }, {
 "frames": [{
@@ -214,4 +214,4 @@ animations = [{
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_8t7s1")
-animation = &"QUIETO"
+animation = &"HIT"
