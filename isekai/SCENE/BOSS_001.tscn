@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b2r8purmb6grb"]
+[gd_scene load_steps=24 format=3 uid="uid://b2r8purmb6grb"]
 
 [ext_resource type="PackedScene" uid="uid://cq2d3r0eww2mw" path="res://SPRITE/BOSS_1.tscn" id="1_2nsg4"]
 [ext_resource type="Script" uid="uid://b3rwxmh12dwh8" path="res://SCRIPT/boss_001.gd" id="1_6h5nb"]
@@ -7,9 +7,11 @@
 [ext_resource type="PackedScene" uid="uid://oomd48e25ihj" path="res://SPRITE/DADO.tscn" id="5_gcqlp"]
 [ext_resource type="Script" uid="uid://cd1b5omvrmt6" path="res://SCRIPT/SISTEMA_DADOS.gd" id="5_tvpd7"]
 [ext_resource type="PackedScene" uid="uid://r6nfo4f23wme" path="res://SPRITE/ANI_FISICO.tscn" id="6_1mv0j"]
+[ext_resource type="FontFile" uid="uid://1cb82rfm6v8s" path="res://ASSET/FUENTES/Pixeled.ttf" id="6_4w7h8"]
 [ext_resource type="Texture2D" uid="uid://7ds5lbn5gyv8" path="res://ASSET/IconSet.png" id="6_qukbu"]
 [ext_resource type="PackedScene" uid="uid://cbg6vnem3xu2f" path="res://SPRITE/ANI_ESPECIAL.tscn" id="7_a18gl"]
 [ext_resource type="Texture2D" uid="uid://cqhvkd5p85t8a" path="res://ASSET/ButtonSet.png" id="7_sqvus"]
+[ext_resource type="Texture2D" uid="uid://2eufsu7ftktk" path="res://ASSET/image-removebg-preview.png" id="8_ggrp2"]
 [ext_resource type="PackedScene" uid="uid://bknhtlrtodjuj" path="res://SPRITE/ANI_DIRECTO.tscn" id="8_j7e2v"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sqvus"]
@@ -31,6 +33,18 @@ region_rect = Rect2(320, 128, 32, 32)
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tg45t"]
 texture = ExtResource("7_sqvus")
 region_rect = Rect2(192, 0, 96, 48)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kr143"]
+texture = ExtResource("8_ggrp2")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xui88"]
+texture = ExtResource("8_ggrp2")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4ltd2"]
+texture = ExtResource("8_ggrp2")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ncoyd"]
+texture = ExtResource("8_ggrp2")
 
 [sub_resource type="Theme" id="Theme_6xav7"]
 default_font_size = 30
@@ -284,83 +298,122 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 100
 text = "/"
 
-[node name="Label" type="Label" parent="Panel"]
-layout_mode = 0
-offset_left = 13.0
-offset_top = 1225.0
-offset_right = 95.0
-offset_bottom = 1248.0
-theme_override_font_sizes/font_size = 50
-text = "TU TURNO:"
+[node name="Control3" type="Control" parent="Panel"]
+anchors_preset = 0
+offset_left = 48.0
+offset_top = 1203.0
+offset_right = 548.0
+offset_bottom = 1378.0
 
-[node name="LBL_NOM_JUG" type="Label" parent="Panel"]
-layout_mode = 0
-offset_left = 283.0
-offset_top = 1229.0
-offset_right = 323.0
-offset_bottom = 1298.0
-theme_override_font_sizes/font_size = 50
+[node name="Label" type="Label" parent="Panel/Control3"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -147.0
+offset_right = 147.0
+offset_bottom = 69.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("6_4w7h8")
+theme_override_font_sizes/font_size = 25
+text = "TU TURNO:"
+horizontal_alignment = 1
+
+[node name="LBL_NOM_JUG" type="Label" parent="Panel/Control3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -34.5
+offset_right = 20.0
+offset_bottom = 34.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("6_4w7h8")
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
 
 [node name="Control2" type="Control" parent="Panel"]
 anchors_preset = 0
 offset_left = 40.0
-offset_top = 1361.0
+offset_top = 1389.0
 offset_right = 1040.0
-offset_bottom = 1852.0
+offset_bottom = 2229.0
 
 [node name="BTN_DANO_FISICO" type="Button" parent="Panel/Control2"]
 layout_mode = 0
-offset_left = 69.0
-offset_right = 289.0
-offset_bottom = 220.0
+offset_right = 270.0
+offset_bottom = 270.0
+theme_override_styles/hover = SubResource("StyleBoxTexture_sqvus")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_sqvus")
 theme_override_styles/normal = SubResource("StyleBoxTexture_sqvus")
 
 [node name="BTN_DANO_ESPECIAL" type="Button" parent="Panel/Control2"]
 layout_mode = 0
 offset_left = 300.0
-offset_right = 520.0
-offset_bottom = 220.0
+offset_right = 570.0
+offset_bottom = 270.0
+theme_override_styles/hover = SubResource("StyleBoxTexture_ggrp2")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ggrp2")
 theme_override_styles/normal = SubResource("StyleBoxTexture_ggrp2")
 
 [node name="BTN_DIRECTO" type="Button" parent="Panel/Control2"]
 layout_mode = 0
 offset_left = 686.0
-offset_right = 936.0
-offset_bottom = 250.0
+offset_right = 956.0
+offset_bottom = 270.0
 theme_override_font_sizes/font_size = 100
+theme_override_styles/hover = SubResource("StyleBoxTexture_4w7h8")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_4w7h8")
 theme_override_styles/normal = SubResource("StyleBoxTexture_4w7h8")
-
-[node name="BTN_LANZAR" type="Button" parent="Panel/Control2"]
-visible = false
-layout_mode = 0
-offset_left = 88.0
-offset_top = -27.0
-offset_right = 901.0
-offset_bottom = 491.0
-theme_override_font_sizes/font_size = 150
-text = "LANZAR"
 
 [node name="BTN_RESTAR" type="Button" parent="Panel/Control2"]
 layout_mode = 0
-offset_left = 706.0
-offset_top = 272.0
-offset_right = 906.0
-offset_bottom = 472.0
+offset_left = 723.0
+offset_top = 360.0
+offset_right = 973.0
+offset_bottom = 610.0
+theme_override_styles/hover = SubResource("StyleBoxTexture_adh1r")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_adh1r")
 theme_override_styles/normal = SubResource("StyleBoxTexture_adh1r")
 
 [node name="BTN_OK" type="Button" parent="Panel/Control2"]
 layout_mode = 0
-offset_left = 276.0
-offset_top = 231.0
-offset_right = 658.0
-offset_bottom = 502.0
+offset_top = 350.0
+offset_right = 620.0
+offset_bottom = 800.0
+theme_override_styles/hover = SubResource("StyleBoxTexture_tg45t")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_tg45t")
 theme_override_styles/normal = SubResource("StyleBoxTexture_tg45t")
 
+[node name="BTN_LANZAR" type="Button" parent="Panel/Control2"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -425.0
+offset_top = -425.0
+offset_right = 425.0
+offset_bottom = 425.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_kr143")
+theme_override_styles/hover = SubResource("StyleBoxTexture_xui88")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_4ltd2")
+theme_override_styles/normal = SubResource("StyleBoxTexture_ncoyd")
+
 [node name="CONTROL_DANO" type="Control" parent="Panel"]
+layout_mode = 1
 anchors_preset = 0
-offset_left = 590.82
+offset_left = 565.0
 offset_top = 1204.55
-offset_right = 1053.82
+offset_right = 1028.0
 offset_bottom = 1304.55
 
 [node name="GridContainer" type="GridContainer" parent="Panel/CONTROL_DANO"]
@@ -427,7 +480,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="LBL_ESPECIAL" type="Label" parent="Panel/CONTROL_DANO/GridContainer/Panel_DIRECTO"]
+[node name="LBL_DIRECTO" type="Label" parent="Panel/CONTROL_DANO/GridContainer/Panel_DIRECTO"]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -449,7 +502,7 @@ scale = Vector2(2, 2)
 
 [node name="DADO" parent="Panel" instance=ExtResource("5_gcqlp")]
 visible = false
-position = Vector2(550, 1000)
+position = Vector2(540, 1100)
 scale = Vector2(2, 2)
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]

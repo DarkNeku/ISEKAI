@@ -7,6 +7,12 @@ var indice_jugador_actual = 0
 var indice_inicio_ronda = 0
 var lista_jugadores = []
 
+# Contadores de daño
+var contador_fisico = 0
+var contador_especial = 0
+var contador_directo = 0
+var historial_golpes = []  # Historial de golpes
+
 # Nodos
 @onready var dado = $Panel/DADO
 @onready var animated_dado = $Panel/DADO/AnimatedSprite2D
@@ -16,24 +22,26 @@ var lista_jugadores = []
 @onready var btn_dano_especial = $Panel/Control2/BTN_DANO_ESPECIAL
 @onready var btn_directo = $Panel/Control2/BTN_DIRECTO
 @onready var btn_restar = $Panel/Control2/BTN_RESTAR
-@onready var lbl_nom_jug = $Panel/LBL_NOM_JUG
+@onready var lbl_nom_jug = $Panel/Control3/LBL_NOM_JUG
 @onready var sistema_dados = $Panel/Control/GridContainer
+
+# Labels de contadores
+@onready var lbl_fisico = $Panel/CONTROL_DANO/GridContainer/Panel_FISICO/LBL_FISICO
+@onready var lbl_especial = $Panel/CONTROL_DANO/GridContainer/Panel_ESPECIAL/LBL_ESPECIAL
+@onready var lbl_directo = $Panel/CONTROL_DANO/GridContainer/Panel_DIRECTO/LBL_DIRECTO
 
 func _ready():
 	cargar_jugadores()
 	
-	# Reproducir animaciones con verificación de errores
 	reproducir_animacion_si_existe($Panel/BOSS_1/AnimatedSprite2D, "QUIETO", "BOSS_1")
 	reproducir_animacion_si_existe($Panel/BOSS_2/AnimatedSprite2D, "QUIETO", "BOSS_2")
 	
 	configurar_barra_vida()
 	
-	# Conectar señal de animación del dado
 	if animated_dado:
 		if not animated_dado.animation_finished.is_connected(_on_dado_animation_finished):
 			animated_dado.animation_finished.connect(_on_dado_animation_finished)
 	
-	# Conectar botones
 	if btn_lanzar:
 		if not btn_lanzar.pressed.is_connected(_on_BTN_LANZAR_pressed):
 			btn_lanzar.pressed.connect(_on_BTN_LANZAR_pressed)
@@ -48,18 +56,32 @@ func _ready():
 			btn_directo.pressed.connect(_on_BTN_DIRECTO_pressed)
 		print("✅ Botón DIRECTO conectado")
 	
-	# Inicializar la primera ronda
+	if btn_dano_fisico:
+		if not btn_dano_fisico.pressed.is_connected(_on_BTN_DANO_FISICO_pressed):
+			btn_dano_fisico.pressed.connect(_on_BTN_DANO_FISICO_pressed)
+		print("✅ Botón DAÑO FÍSICO conectado")
+	
+	if btn_dano_especial:
+		if not btn_dano_especial.pressed.is_connected(_on_BTN_DANO_ESPECIAL_pressed):
+			btn_dano_especial.pressed.connect(_on_BTN_DANO_ESPECIAL_pressed)
+		print("✅ Botón DAÑO ESPECIAL conectado")
+	
+	if btn_restar:
+		if not btn_restar.pressed.is_connected(_on_BTN_RESTAR_pressed):
+			btn_restar.pressed.connect(_on_BTN_RESTAR_pressed)
+		print("✅ Botón RESTAR conectado")
+	
 	indice_inicio_ronda = 0
 	indice_jugador_actual = 0
 	actualizar_nombre_jugador()
 	
-	# Desactivar botones al inicio
-	set_botones_activos(false)
+	actualizar_contadores_ui()
 	
-	# Lanzar el dado al iniciar
+	set_botones_activos(false)
+	set_botones_visibles(true)
+	
 	lanzar_dado()
 
-# Función auxiliar para reproducir animaciones de forma segura
 func reproducir_animacion_si_existe(animated_sprite: AnimatedSprite2D, anim_name: String, nombre_nodo: String):
 	if not animated_sprite:
 		print("❌ ", nombre_nodo, " no encontrado")
@@ -74,29 +96,30 @@ func reproducir_animacion_si_existe(animated_sprite: AnimatedSprite2D, anim_name
 		print("✅ ", nombre_nodo, " reproduciendo: ", anim_name)
 	else:
 		print("❌ ", nombre_nodo, " no tiene la animación: ", anim_name)
-		print("   Animaciones disponibles: ", animated_sprite.sprite_frames.get_animation_names())
 
-func _on_BTN_DIRECTO_pressed():
-	print("🔘 Botón DIRECTO presionado")
-	
-	if sistema_dados and sistema_dados.has_method("get_resultados_actuales"):
-		var resultados = sistema_dados.get_resultados_actuales()
-		var daño = resultados.get("ataf", 0) + resultados.get("atas", 0)
-		reducir_vida_boss(daño)
-		print("  → Daño directo: ", daño)
-	else:
-		reducir_vida_boss(10)
-		print("  → Daño directo fijo: 10")
+func actualizar_contadores_ui():
+	if lbl_fisico:
+		lbl_fisico.text = str(contador_fisico)
+	if lbl_especial:
+		lbl_especial.text = str(contador_especial)
+	if lbl_directo:
+		lbl_directo.text = str(contador_directo)
+	print("📊 Contadores - Físico: ", contador_fisico, " | Especial: ", contador_especial, " | Directo: ", contador_directo)
 
-func lanzar_y_calcular_dados():
-	print("🎲 Lanzando dados...")
-	if sistema_dados and sistema_dados.has_method("lanzar_todos_los_dados"):
-		var resultados = sistema_dados.lanzar_todos_los_dados(cantidad_jugadores)
-		print("📊 Resultados: ", resultados)
-		return resultados
-	else:
-		print("❌ Sistema de dados no disponible")
-		return null
+func reiniciar_contadores():
+	contador_fisico = 0
+	contador_especial = 0
+	contador_directo = 0
+	historial_golpes.clear()
+	actualizar_contadores_ui()
+	print("🔄 Contadores e historial reiniciados")
+
+func set_botones_visibles(visible: bool):
+	var botones = [btn_ok, btn_dano_fisico, btn_dano_especial, btn_directo, btn_restar]
+	for boton in botones:
+		if boton:
+			boton.visible = visible
+	print("🔘 Botones: ", "VISIBLES" if visible else "INVISIBLES")
 
 func set_botones_activos(activo: bool):
 	if btn_ok:
@@ -109,7 +132,64 @@ func set_botones_activos(activo: bool):
 		btn_directo.disabled = !activo
 	if btn_restar:
 		btn_restar.disabled = !activo
-	print("🔘 Botones: ", "ACTIVOS" if activo else "DESACTIVADOS")
+	print("🔘 Botones estado: ", "ACTIVOS" if activo else "DESACTIVADOS")
+
+func _on_BTN_DANO_FISICO_pressed():
+	print("🔘 Botón DAÑO FÍSICO presionado")
+	contador_fisico += 1
+	historial_golpes.append("fisico")
+	actualizar_contadores_ui()
+
+func _on_BTN_DANO_ESPECIAL_pressed():
+	print("🔘 Botón DAÑO ESPECIAL presionado")
+	contador_especial += 1
+	historial_golpes.append("especial")
+	actualizar_contadores_ui()
+
+func _on_BTN_DIRECTO_pressed():
+	print("🔘 Botón DIRECTO presionado")
+	contador_directo += 1
+	historial_golpes.append("directo")
+	actualizar_contadores_ui()
+	
+	if sistema_dados and sistema_dados.has_method("get_resultados_actuales"):
+		var resultados = sistema_dados.get_resultados_actuales()
+		var daño = resultados.get("ataf", 0) + resultados.get("atas", 0)
+		reducir_vida_boss(daño)
+	else:
+		reducir_vida_boss(10)
+
+func _on_BTN_RESTAR_pressed():
+	print("🔘 Botón RESTAR presionado")
+	
+	if historial_golpes.is_empty():
+		print("  → No hay nada que deshacer")
+		return
+	
+	var ultimo = historial_golpes.pop_back()
+	
+	match ultimo:
+		"fisico":
+			contador_fisico -= 1
+			print("  → Deshaciendo 1 Físico")
+		"especial":
+			contador_especial -= 1
+			print("  → Deshaciendo 1 Especial")
+		"directo":
+			contador_directo -= 1
+			print("  → Deshaciendo 1 Directo")
+	
+	actualizar_contadores_ui()
+
+func lanzar_y_calcular_dados():
+	print("🎲 Lanzando dados...")
+	if sistema_dados and sistema_dados.has_method("lanzar_todos_los_dados"):
+		var resultados = sistema_dados.lanzar_todos_los_dados(cantidad_jugadores)
+		print("📊 Resultados: ", resultados)
+		return resultados
+	else:
+		print("❌ Sistema de dados no disponible")
+		return null
 
 func cargar_jugadores():
 	var ruta = "user://" + "jugadores.json"
@@ -149,6 +229,13 @@ func actualizar_nombre_jugador():
 func _on_BTN_OK_pressed():
 	print("🔘 Botón OK presionado")
 	
+	print("  → Resumen del turno:")
+	print("     Físico: ", contador_fisico)
+	print("     Especial: ", contador_especial)
+	print("     Directo: ", contador_directo)
+	
+	reiniciar_contadores()
+	
 	indice_jugador_actual += 1
 	contador_ok += 1
 	
@@ -158,6 +245,7 @@ func _on_BTN_OK_pressed():
 		print("🎉 Ronda completa! Mostrando LANZAR")
 		btn_lanzar.visible = true
 		set_botones_activos(false)
+		set_botones_visibles(false)
 	else:
 		actualizar_nombre_jugador()
 
@@ -181,6 +269,7 @@ func _on_BTN_LANZAR_pressed():
 
 func lanzar_dado():
 	lanzar_y_calcular_dados()
+	reiniciar_contadores()
 	if dado:
 		dado.visible = true
 	if animated_dado and animated_dado.sprite_frames and animated_dado.sprite_frames.has_animation("LANZAMIENTO"):
@@ -188,7 +277,8 @@ func lanzar_dado():
 		print("🎲 Dado lanzado")
 	else:
 		print("❌ No se puede reproducir animación LANZAMIENTO del dado")
-		set_botones_activos(true)  # Activar botones si no hay animación
+		set_botones_activos(true)
+		set_botones_visibles(true)
 
 func _on_dado_animation_finished():
 	if animated_dado and animated_dado.animation == "LANZAMIENTO":
@@ -196,6 +286,7 @@ func _on_dado_animation_finished():
 			dado.visible = false
 		print("🎲 Animación terminada")
 		set_botones_activos(true)
+		set_botones_visibles(true)
 
 func configurar_barra_vida():
 	var barra = $Panel/VIDA_BOSS
@@ -242,5 +333,4 @@ func reducir_vida_boss(cantidad):
 		print("💀 BOSS DERROTADO 💀")
 
 func _process(_delta):
-	# Tecla ESPACIO ya no hace daño, ahora solo BTN_DIRECTO
 	pass
