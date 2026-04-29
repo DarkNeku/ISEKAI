@@ -63,7 +63,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"ANI_GOLPE_DIRECTO",
-"speed": 10.0
+"speed": 15.0
 }]
 
 [node name="GOLPE_DIRECTO" type="AnimatedSprite2D"]

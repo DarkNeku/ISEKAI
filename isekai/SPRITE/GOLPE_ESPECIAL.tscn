@@ -1,7 +1,12 @@
-[gd_scene load_steps=49 format=3 uid="uid://c57ah0u2k23hr"]
+[gd_scene load_steps=52 format=3 uid="uid://c57ah0u2k23hr"]
 
+[ext_resource type="Texture2D" uid="uid://siclxwn6jena" path="res://ASSET/BOSS/Gun1.png" id="1_aywma"]
 [ext_resource type="Texture2D" uid="uid://boq0pa6e3vlij" path="res://ASSET/BOSS/Breath.png" id="1_efwxl"]
 [ext_resource type="Texture2D" uid="uid://br53uqm4w8rx" path="res://ASSET/BOSS/Explosion2.png" id="2_efwxl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yxqcq"]
+atlas = ExtResource("1_aywma")
+region = Rect2(240, 800, 240, 160)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_04jky"]
 atlas = ExtResource("1_efwxl")
@@ -62,6 +67,10 @@ region = Rect2(576, 384, 192, 192)
 [sub_resource type="AtlasTexture" id="AtlasTexture_7khj2"]
 atlas = ExtResource("1_efwxl")
 region = Rect2(768, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hiluh"]
+atlas = ExtResource("1_aywma")
+region = Rect2(480, 800, 240, 160)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6impw"]
 atlas = ExtResource("2_efwxl")
@@ -187,6 +196,9 @@ region = Rect2(768, 960, 192, 192)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_yxqcq")
+}, {
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_04jky")
 }, {
 "duration": 1.0,
@@ -230,6 +242,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_7khj2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hiluh")
 }],
 "loop": false,
 "name": &"ANI_GOLPE_ESPECIAL",
@@ -334,5 +349,3 @@ animations = [{
 [node name="GOLPE_ESPECIAL" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_ihf17")
 animation = &"ANI_GOLPE_ESPECIAL"
-frame = 14
-frame_progress = 1.0

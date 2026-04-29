@@ -129,7 +129,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"ANI_GOLPE_FISICO",
-"speed": 15.0
+"speed": 20.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -188,11 +188,9 @@ animations = [{
 }],
 "loop": false,
 "name": &"ANI_GOLPE_FISICO_2",
-"speed": 16.0
+"speed": 20.0
 }]
 
 [node name="GOLPE_FISICO" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_c53bx")
 animation = &"ANI_GOLPE_FISICO"
-frame = 6
-frame_progress = 1.0

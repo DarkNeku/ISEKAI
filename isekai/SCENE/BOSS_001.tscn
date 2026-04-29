@@ -528,33 +528,30 @@ position = Vector2(540, 1100)
 scale = Vector2(2, 2)
 
 [node name="GOLPE_FISICO" parent="Panel" instance=ExtResource("14_ncoyd")]
-position = Vector2(794, 624)
+visible = false
+position = Vector2(720, 624)
 scale = Vector2(2, 2)
-frame_progress = 0.0
 
 [node name="ESCUDO_FISICO" parent="Panel" instance=ExtResource("15_xui88")]
-modulate = Color(1, 1, 1, 0.196078)
+visible = false
 position = Vector2(514, 593)
 scale = Vector2(3.045, 3.045)
-frame = 22
 
 [node name="GOLPE_ESPECIAL" parent="Panel" instance=ExtResource("16_xui88")]
-position = Vector2(800, 649.985)
+visible = false
+position = Vector2(600, 649.985)
 scale = Vector2(1.5, 1.5)
-frame = 0
-frame_progress = 0.0
 
 [node name="ESCUDO_ESPECIAL" parent="Panel" instance=ExtResource("17_kr143")]
+visible = false
 position = Vector2(531, 585)
 scale = Vector2(3, 3)
 animation = &"ANI_ESCUDO_ESPECIAL_ACTIVO"
-frame = 10
 
 [node name="GOLPE_DIRECTO" parent="Panel" instance=ExtResource("18_4ltd2")]
+visible = false
 position = Vector2(539, 640)
 scale = Vector2(2.95, 2.95)
-frame = 7
-speed_scale = 0.0
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
 title = ""

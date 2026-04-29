@@ -241,7 +241,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"ANI_ESCUDO_FISICO_ACTIVO",
-"speed": 20.0
+"speed": 30.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -304,5 +304,6 @@ animations = [{
 }]
 
 [node name="ESCUDO_FISICO" type="AnimatedSprite2D"]
+scale = Vector2(1.505, 1.505)
 sprite_frames = SubResource("SpriteFrames_lhtk1")
-animation = &"ANI_ESCUDO_FISICO_ACTIVO"
+animation = &"ANI_ESCUDO_FISICO_ROTO"
