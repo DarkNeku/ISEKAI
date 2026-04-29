@@ -194,3 +194,5 @@ animations = [{
 [node name="GOLPE_FISICO" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_c53bx")
 animation = &"ANI_GOLPE_FISICO"
+frame = 6
+frame_progress = 1.0

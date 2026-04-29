@@ -161,7 +161,6 @@ func _on_BTN_DIRECTO_pressed():
 	contador_directo += 1
 	historial_golpes.append("directo")
 	actualizar_contadores_ui()
-	# ELIMINÉ el daño inmediato, ahora se acumula
 
 func _on_BTN_RESTAR_pressed():
 	print("🔘 Botón RESTAR presionado")
@@ -308,9 +307,22 @@ func _on_dado_animation_finished():
 	if animated_dado and animated_dado.animation == "LANZAMIENTO":
 		if dado:
 			dado.visible = false
-		print("🎲 Animación terminada")
+		print("🎲 Animación del dado terminada")
+		
+		# BOSS ataca (7 frames a 10 FPS = 0.7 segundos)
+		$Panel/BOSS_1/AnimatedSprite2D.play("ATAQUE")
+		$Panel/BOSS_2/AnimatedSprite2D.play("ATAQUE")
+		
+		# Esperar a que termine la animación de ataque
+		await get_tree().create_timer(0.7).timeout
+		
+		# Volver a animación quieto
+		$Panel/BOSS_1/AnimatedSprite2D.play("QUIETO")
+		$Panel/BOSS_2/AnimatedSprite2D.play("QUIETO")
+		
+		# Reactivar botones y asegurar que sean visibles
 		set_botones_activos(true)
-		set_botones_visibles(true)
+		set_botones_visibles(true)  # ← CLAVE: hacerlos visibles
 
 func configurar_barra_vida():
 	var barra = $Panel/VIDA_BOSS
