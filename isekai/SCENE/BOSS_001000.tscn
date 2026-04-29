@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b2r8purmb6grb"]
+[gd_scene load_steps=19 format=3 uid="uid://crloxjqmikhdq"]
 
 [ext_resource type="PackedScene" uid="uid://cq2d3r0eww2mw" path="res://SPRITE/BOSS_1.tscn" id="1_2nsg4"]
 [ext_resource type="Script" uid="uid://b3rwxmh12dwh8" path="res://SCRIPT/boss_001.gd" id="1_6h5nb"]
@@ -12,23 +12,25 @@
 [ext_resource type="Texture2D" uid="uid://cqhvkd5p85t8a" path="res://ASSET/ButtonSet.png" id="7_sqvus"]
 [ext_resource type="PackedScene" uid="uid://bknhtlrtodjuj" path="res://SPRITE/ANI_DIRECTO.tscn" id="8_j7e2v"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sqvus"]
-texture = ExtResource("6_qukbu")
-region_rect = Rect2(384, 128, 32, 32)
+[sub_resource type="ViewportTexture" id="ViewportTexture_sqvus"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ggrp2"]
 texture = ExtResource("6_qukbu")
-region_rect = Rect2(448, 128, 32, 32)
+region_rect = Rect2(384, 128, 32, 32)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4w7h8"]
 texture = ExtResource("6_qukbu")
-region_rect = Rect2(416, 128, 32, 32)
+region_rect = Rect2(448, 128, 32, 32)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_adh1r"]
 texture = ExtResource("6_qukbu")
-region_rect = Rect2(320, 128, 32, 32)
+region_rect = Rect2(416, 128, 32, 32)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tg45t"]
+texture = ExtResource("6_qukbu")
+region_rect = Rect2(320, 128, 32, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ncoyd"]
 texture = ExtResource("7_sqvus")
 region_rect = Rect2(192, 0, 96, 48)
 
@@ -309,26 +311,37 @@ offset_right = 1040.0
 offset_bottom = 1852.0
 
 [node name="BTN_DANO_FISICO" type="Button" parent="Panel/Control2"]
-layout_mode = 0
-offset_left = 69.0
-offset_right = 289.0
-offset_bottom = 220.0
-theme_override_styles/normal = SubResource("StyleBoxTexture_sqvus")
-
-[node name="BTN_DANO_ESPECIAL" type="Button" parent="Panel/Control2"]
-layout_mode = 0
-offset_left = 300.0
-offset_right = 520.0
-offset_bottom = 220.0
+layout_mode = 1
+offset_left = 84.0
+offset_top = -5.0
+offset_right = 284.0
+offset_bottom = 195.0
+theme_override_font_sizes/font_size = 100
+theme_override_icons/icon = SubResource("ViewportTexture_sqvus")
 theme_override_styles/normal = SubResource("StyleBoxTexture_ggrp2")
 
-[node name="BTN_DIRECTO" type="Button" parent="Panel/Control2"]
-layout_mode = 0
-offset_left = 686.0
-offset_right = 936.0
-offset_bottom = 250.0
+[node name="BTN_DANO_ESPECIAL" type="Button" parent="Panel/Control2"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -50.0
+offset_right = 150.0
+offset_bottom = 200.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 100
 theme_override_styles/normal = SubResource("StyleBoxTexture_4w7h8")
+
+[node name="BTN_DIRECTO" type="Button" parent="Panel/Control2"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -200.0
+offset_bottom = 200.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 100
+theme_override_styles/normal = SubResource("StyleBoxTexture_adh1r")
 
 [node name="BTN_LANZAR" type="Button" parent="Panel/Control2"]
 visible = false
@@ -342,19 +355,21 @@ text = "LANZAR"
 
 [node name="BTN_RESTAR" type="Button" parent="Panel/Control2"]
 layout_mode = 0
-offset_left = 706.0
-offset_top = 272.0
-offset_right = 906.0
-offset_bottom = 472.0
-theme_override_styles/normal = SubResource("StyleBoxTexture_adh1r")
+offset_left = 559.0
+offset_top = 243.0
+offset_right = 759.0
+offset_bottom = 443.0
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("StyleBoxTexture_tg45t")
 
 [node name="BTN_OK" type="Button" parent="Panel/Control2"]
 layout_mode = 0
-offset_left = 276.0
-offset_top = 231.0
-offset_right = 658.0
-offset_bottom = 502.0
-theme_override_styles/normal = SubResource("StyleBoxTexture_tg45t")
+offset_left = 196.0
+offset_top = 278.0
+offset_right = 446.0
+offset_bottom = 528.0
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("StyleBoxTexture_ncoyd")
 
 [node name="CONTROL_DANO" type="Control" parent="Panel"]
 anchors_preset = 0

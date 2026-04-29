@@ -22,23 +22,30 @@ var lista_jugadores = []
 func _ready():
 	cargar_jugadores()
 	
-	$Panel/BOSS_1/AnimatedSprite2D.play("QUIETO")
-	$Panel/BOSS_2/AnimatedSprite2D.play("QUIETO")
+	# Reproducir animaciones con verificación de errores
+	reproducir_animacion_si_existe($Panel/BOSS_1/AnimatedSprite2D, "QUIETO", "BOSS_1")
+	reproducir_animacion_si_existe($Panel/BOSS_2/AnimatedSprite2D, "QUIETO", "BOSS_2")
 	
 	configurar_barra_vida()
 	
-	animated_dado.animation_finished.connect(_on_dado_animation_finished)
+	# Conectar señal de animación del dado
+	if animated_dado:
+		if not animated_dado.animation_finished.is_connected(_on_dado_animation_finished):
+			animated_dado.animation_finished.connect(_on_dado_animation_finished)
 	
+	# Conectar botones
 	if btn_lanzar:
-		btn_lanzar.pressed.connect(_on_BTN_LANZAR_pressed)
+		if not btn_lanzar.pressed.is_connected(_on_BTN_LANZAR_pressed):
+			btn_lanzar.pressed.connect(_on_BTN_LANZAR_pressed)
 		btn_lanzar.visible = false
 	
 	if btn_ok:
-		btn_ok.pressed.connect(_on_BTN_OK_pressed)
+		if not btn_ok.pressed.is_connected(_on_BTN_OK_pressed):
+			btn_ok.pressed.connect(_on_BTN_OK_pressed)
 	
-	# NUEVO: Conectar botón DIRECTO
 	if btn_directo:
-		btn_directo.pressed.connect(_on_BTN_DIRECTO_pressed)
+		if not btn_directo.pressed.is_connected(_on_BTN_DIRECTO_pressed):
+			btn_directo.pressed.connect(_on_BTN_DIRECTO_pressed)
 		print("✅ Botón DIRECTO conectado")
 	
 	# Inicializar la primera ronda
@@ -52,18 +59,32 @@ func _ready():
 	# Lanzar el dado al iniciar
 	lanzar_dado()
 
-# NUEVA FUNCIÓN: Botón DIRECTO presionado
+# Función auxiliar para reproducir animaciones de forma segura
+func reproducir_animacion_si_existe(animated_sprite: AnimatedSprite2D, anim_name: String, nombre_nodo: String):
+	if not animated_sprite:
+		print("❌ ", nombre_nodo, " no encontrado")
+		return
+	
+	if not animated_sprite.sprite_frames:
+		print("❌ ", nombre_nodo, " no tiene sprite_frames asignados")
+		return
+	
+	if animated_sprite.sprite_frames.has_animation(anim_name):
+		animated_sprite.play(anim_name)
+		print("✅ ", nombre_nodo, " reproduciendo: ", anim_name)
+	else:
+		print("❌ ", nombre_nodo, " no tiene la animación: ", anim_name)
+		print("   Animaciones disponibles: ", animated_sprite.sprite_frames.get_animation_names())
+
 func _on_BTN_DIRECTO_pressed():
 	print("🔘 Botón DIRECTO presionado")
 	
-	# Calcular daño basado en resultados actuales
 	if sistema_dados and sistema_dados.has_method("get_resultados_actuales"):
 		var resultados = sistema_dados.get_resultados_actuales()
-		var daño = resultados["ataf"] + resultados["atas"]
+		var daño = resultados.get("ataf", 0) + resultados.get("atas", 0)
 		reducir_vida_boss(daño)
 		print("  → Daño directo: ", daño)
 	else:
-		# Si no hay sistema de dados, hacer daño fijo de 10
 		reducir_vida_boss(10)
 		print("  → Daño directo fijo: 10")
 
@@ -154,28 +175,34 @@ func _on_BTN_LANZAR_pressed():
 	
 	actualizar_nombre_jugador()
 	
-	# NUEVO: Calcular daño antes de lanzar? (opcional)
-	# Si quieres que también haga daño al lanzar, descomenta:
-	# _on_BTN_DIRECTO_pressed()
-	
 	lanzar_dado()
 	
 	print("  → Nueva ronda con: ", obtener_nombre_rotado(0))
 
 func lanzar_dado():
 	lanzar_y_calcular_dados()
-	dado.visible = true
-	animated_dado.play("LANZAMIENTO")
-	print("🎲 Dado lanzado")
+	if dado:
+		dado.visible = true
+	if animated_dado and animated_dado.sprite_frames and animated_dado.sprite_frames.has_animation("LANZAMIENTO"):
+		animated_dado.play("LANZAMIENTO")
+		print("🎲 Dado lanzado")
+	else:
+		print("❌ No se puede reproducir animación LANZAMIENTO del dado")
+		set_botones_activos(true)  # Activar botones si no hay animación
 
 func _on_dado_animation_finished():
-	if animated_dado.animation == "LANZAMIENTO":
-		dado.visible = false
+	if animated_dado and animated_dado.animation == "LANZAMIENTO":
+		if dado:
+			dado.visible = false
 		print("🎲 Animación terminada")
 		set_botones_activos(true)
 
 func configurar_barra_vida():
 	var barra = $Panel/VIDA_BOSS
+	if not barra:
+		print("❌ No se encontró VIDA_BOSS")
+		return
+	
 	barra.max_value = 100
 	barra.min_value = 0
 	barra.value = 100
@@ -205,14 +232,15 @@ func configurar_barra_vida():
 
 func reducir_vida_boss(cantidad):
 	var barra = $Panel/VIDA_BOSS
+	if not barra:
+		return
 	barra.value = max(0, barra.value - cantidad)
 	print("💥 BOSS recibe ", cantidad, " de daño")
 	print("  ❤️ Vida restante: ", barra.value, "%")
 	
 	if barra.value <= 0:
 		print("💀 BOSS DERROTADO 💀")
-		# Aquí puedes agregar lo que pase cuando el boss muere
 
-func _process(delta):
+func _process(_delta):
 	# Tecla ESPACIO ya no hace daño, ahora solo BTN_DIRECTO
 	pass
