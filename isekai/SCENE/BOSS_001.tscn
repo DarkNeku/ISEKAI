@@ -82,7 +82,7 @@ scale = Vector2(6, 6)
 
 [node name="BOSS_2" parent="Panel" instance=ExtResource("4_ca2tb")]
 visible = false
-position = Vector2(580, 360)
+position = Vector2(566, 456)
 scale = Vector2(6, 6)
 
 [node name="VIDA_BOSS" type="ProgressBar" parent="Panel"]
