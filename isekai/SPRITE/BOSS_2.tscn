@@ -248,7 +248,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"ATAQUE",
-"speed": 10.0
+"speed": 15.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -271,7 +271,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"HIT",
-"speed": 7.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -365,7 +365,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"QUIETO",
-"speed": 10.0
+"speed": 12.0
 }]
 
 [node name="BOSS_1" type="CharacterBody2D"]
@@ -374,4 +374,5 @@ animations = [{
 scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_8t7s1")
 animation = &"QUIETO"
+frame_progress = 0.977179
 flip_h = true
