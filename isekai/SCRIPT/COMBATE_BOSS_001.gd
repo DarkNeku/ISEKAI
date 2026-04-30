@@ -8,7 +8,7 @@ var escudo_fisico_base: int = 0
 var escudo_fisico_actual: int = 0
 var escudo_especial_base: int = 0
 var escudo_especial_actual: int = 0
-var boss_muerto: bool = false  # ← NUEVA: control de muerte
+var boss_muerto: bool = false
 
 # ============================================
 # REFERENCIAS A NODOS
@@ -27,13 +27,17 @@ var ani_escudo_fisico: AnimatedSprite2D = null
 var ani_escudo_especial: AnimatedSprite2D = null
 var boss_1: AnimatedSprite2D = null
 
+# Callback para actualizar UI de contadores
+var actualizar_contadores_callback: Callable = Callable()
+
 # ============================================
 # CONFIGURACIÓN INICIAL
 # ============================================
 func inicializar(
 	_lbl_deff: Label, _lbl_deff_2: Label, _lbl_defs: Label, _lbl_defs_2: Label, _barra_vida: ProgressBar,
 	_ani_golpe_fisico: AnimatedSprite2D, _ani_golpe_especial: AnimatedSprite2D, _ani_golpe_directo: AnimatedSprite2D,
-	_ani_escudo_fisico: AnimatedSprite2D, _ani_escudo_especial: AnimatedSprite2D, _boss_1: AnimatedSprite2D
+	_ani_escudo_fisico: AnimatedSprite2D, _ani_escudo_especial: AnimatedSprite2D, _boss_1: AnimatedSprite2D,
+	_callback: Callable
 ):
 	lbl_deff = _lbl_deff
 	lbl_deff_2 = _lbl_deff_2
@@ -47,6 +51,7 @@ func inicializar(
 	ani_escudo_especial = _ani_escudo_especial
 	boss_1 = _boss_1
 	boss_muerto = false
+	actualizar_contadores_callback = _callback
 	print("✅ Sistema de combate inicializado")
 
 # ============================================
@@ -129,17 +134,22 @@ func calcular_daño_directo(golpes: int) -> int:
 		return 0
 	return golpes
 
+# ============================================
+# APLICAR GOLPES
+# ============================================
 func aplicar_golpe_fisico() -> int:
 	if boss_muerto:
 		return 0
 	
 	if escudo_fisico_actual <= 0:
+		escudo_fisico_actual -= 1
+		actualizar_ui_escudo_fisico()
 		return 1
 	
 	escudo_fisico_actual -= 1
 	actualizar_ui_escudo_fisico()
 	
-	if escudo_fisico_actual == 0:
+	if escudo_fisico_actual < 0:
 		return 1
 	return 0
 
@@ -148,12 +158,14 @@ func aplicar_golpe_especial() -> int:
 		return 0
 	
 	if escudo_especial_actual <= 0:
+		escudo_especial_actual -= 1
+		actualizar_ui_escudo_especial()
 		return 1
 	
 	escudo_especial_actual -= 1
 	actualizar_ui_escudo_especial()
 	
-	if escudo_especial_actual == 0:
+	if escudo_especial_actual < 0:
 		return 1
 	return 0
 
@@ -166,33 +178,21 @@ func aplicar_daño_a_vida(cantidad: int) -> int:
 	barra_vida.value = vida_nueva
 	print("💥 Daño a vida: ", cantidad, " | Vida restante: ", vida_nueva)
 	
-	# Si la vida llegó a 0 y antes había vida, activar muerte y bloquear daño futuro
 	if vida_nueva <= 0 and vida_anterior > 0:
 		boss_muerto = true
 		_muerte_boss()
 	
 	return vida_nueva
 
-func _muerte_boss():
-	print("💀 BOSS DERROTADO - Reproduciendo MUERTE")
-	if boss_1 and boss_1.sprite_frames and boss_1.sprite_frames.has_animation("MUERTE"):
-		# Conectar señal de fin de animación
-		if not boss_1.animation_finished.is_connected(_on_muerte_animation_finished):
-			boss_1.animation_finished.connect(_on_muerte_animation_finished)
-		boss_1.play("MUERTE")
-	else:
-		print("❌ Animación MUERTE no encontrada en BOSS_1")
-		boss_1.visible = false
+func reiniciar_contadores_escudos():
+	if escudo_fisico_actual < 0:
+		escudo_fisico_actual = 0
+	if escudo_especial_actual < 0:
+		escudo_especial_actual = 0
+	actualizar_ui_escudo_fisico()
+	actualizar_ui_escudo_especial()
+	print("🔄 Contadores de escudos reiniciados a 0 (solo negativos)")
 
-func _on_muerte_animation_finished():
-	if boss_1 and boss_1.animation == "MUERTE":
-		print("💀 Animación de muerte terminada, ocultando BOSS_1")
-		boss_1.visible = false
-		# Desconectar la señal para evitar que se ejecute múltiples veces
-		if boss_1.animation_finished.is_connected(_on_muerte_animation_finished):
-			boss_1.animation_finished.disconnect(_on_muerte_animation_finished)
-			
-			
 func reiniciar_escudos():
 	if boss_muerto:
 		return
@@ -212,7 +212,7 @@ func is_boss_muerto() -> bool:
 	return boss_muerto
 
 # ============================================
-# FUNCIONES DE ANIMACIÓN (1 segundo cada animación)
+# FUNCIONES DE ANIMACIÓN
 # ============================================
 func _reproducir_animacion(sprite: AnimatedSprite2D, anim_name: String, duracion: float = 1.0):
 	if not sprite or not sprite.sprite_frames:
@@ -274,16 +274,32 @@ func _hit_boss():
 		print("  ➤ BOSS recibe HIT")
 		boss_1.play("HIT")
 		await get_tree().create_timer(1.0).timeout
-		# Solo volver a QUIETO si NO está muerto
 		if not boss_muerto:
 			boss_1.play("QUIETO")
-			
+
+func _muerte_boss():
+	print("💀 BOSS DERROTADO - Reproduciendo MUERTE")
+	if boss_1 and boss_1.sprite_frames and boss_1.sprite_frames.has_animation("MUERTE"):
+		if not boss_1.animation_finished.is_connected(_on_muerte_animation_finished):
+			boss_1.animation_finished.connect(_on_muerte_animation_finished)
+		boss_1.play("MUERTE")
+	else:
+		print("❌ Animación MUERTE no encontrada en BOSS_1")
+		boss_1.visible = false
+
+func _on_muerte_animation_finished():
+	if boss_1 and boss_1.animation == "MUERTE":
+		print("💀 Animación de muerte terminada, ocultando BOSS_1")
+		boss_1.visible = false
+		if boss_1.animation_finished.is_connected(_on_muerte_animation_finished):
+			boss_1.animation_finished.disconnect(_on_muerte_animation_finished)
+
 # ============================================
-# SECUENCIAS COMPLETAS
+# SECUENCIAS COMPLETAS (con actualización de contadores)
 # ============================================
 
 # SECUENCIA FÍSICA
-func ejecutar_daño_fisico(cantidad_golpes: int):
+func ejecutar_daño_fisico(cantidad_golpes: int, contador_original: int):
 	if boss_muerto:
 		print("⚠️ Boss ya está muerto, no se ejecuta daño físico")
 		return
@@ -297,6 +313,11 @@ func ejecutar_daño_fisico(cantidad_golpes: int):
 		
 		print("")
 		print("  🔹 Golpe FÍSICO ", i + 1, " de ", cantidad_golpes)
+		
+		# Actualizar contador UI (golpes restantes)
+		var golpes_restantes = cantidad_golpes - i - 1
+		if actualizar_contadores_callback.is_valid():
+			actualizar_contadores_callback.call(golpes_restantes, -1, -1)
 		
 		var escudo_antes = escudo_fisico_actual
 		var golpe_con_escudo = escudo_antes > 0
@@ -326,13 +347,17 @@ func ejecutar_daño_fisico(cantidad_golpes: int):
 				aplicar_daño_a_vida(1)
 		
 		if i < cantidad_golpes - 1 and not boss_muerto:
-			print("  ⏱️ Esperando 2 segundos entre golpes...")
+			print("  ⏱️ Esperando 0.8 segundos entre golpes...")
 			await get_tree().create_timer(0.8).timeout
+	
+	# Al final, asegurar que el contador quede en 0
+	if actualizar_contadores_callback.is_valid():
+		actualizar_contadores_callback.call(0, -1, -1)
 	
 	print("🎬 ===== FIN SECUENCIA GOLPES FÍSICOS =====")
 
 # SECUENCIA ESPECIAL
-func ejecutar_daño_especial(cantidad_golpes: int):
+func ejecutar_daño_especial(cantidad_golpes: int, contador_original: int):
 	if boss_muerto:
 		print("⚠️ Boss ya está muerto, no se ejecuta daño especial")
 		return
@@ -346,6 +371,11 @@ func ejecutar_daño_especial(cantidad_golpes: int):
 		
 		print("")
 		print("  🔹 Golpe ESPECIAL ", i + 1, " de ", cantidad_golpes)
+		
+		# Actualizar contador UI (golpes restantes)
+		var golpes_restantes = cantidad_golpes - i - 1
+		if actualizar_contadores_callback.is_valid():
+			actualizar_contadores_callback.call(-1, golpes_restantes, -1)
 		
 		var escudo_antes = escudo_especial_actual
 		var golpe_con_escudo = escudo_antes > 0
@@ -375,13 +405,17 @@ func ejecutar_daño_especial(cantidad_golpes: int):
 				aplicar_daño_a_vida(1)
 		
 		if i < cantidad_golpes - 1 and not boss_muerto:
-			print("  ⏱️ Esperando 2 segundos entre golpes...")
+			print("  ⏱️ Esperando 0.8 segundos entre golpes...")
 			await get_tree().create_timer(0.8).timeout
+	
+	# Al final, asegurar que el contador quede en 0
+	if actualizar_contadores_callback.is_valid():
+		actualizar_contadores_callback.call(-1, 0, -1)
 	
 	print("🎬 ===== FIN SECUENCIA GOLPES ESPECIALES =====")
 
 # SECUENCIA DIRECTA
-func ejecutar_daño_directo(cantidad_golpes: int):
+func ejecutar_daño_directo(cantidad_golpes: int, contador_original: int):
 	if boss_muerto:
 		print("⚠️ Boss ya está muerto, no se ejecuta daño directo")
 		return
@@ -390,7 +424,7 @@ func ejecutar_daño_directo(cantidad_golpes: int):
 	print("🔢 Cantidad de golpes: ", cantidad_golpes)
 	
 	var ambos_escudos_rotos = (escudo_fisico_actual <= 0 and escudo_especial_actual <= 0)
-	var daño_por_golpe = 10 if ambos_escudos_rotos else 5
+	var daño_por_golpe = 2 if ambos_escudos_rotos else 1
 	
 	print("  🛡️ Escudo Físico: ", escudo_fisico_actual)
 	print("  🛡️ Escudo Especial: ", escudo_especial_actual)
@@ -403,6 +437,11 @@ func ejecutar_daño_directo(cantidad_golpes: int):
 		print("")
 		print("  🔹 Golpe DIRECTO ", i + 1, " de ", cantidad_golpes)
 		
+		# Actualizar contador UI (golpes restantes)
+		var golpes_restantes = cantidad_golpes - i - 1
+		if actualizar_contadores_callback.is_valid():
+			actualizar_contadores_callback.call(-1, -1, golpes_restantes)
+		
 		_golpe_directo()
 		await get_tree().create_timer(0.2).timeout
 		if not boss_muerto:
@@ -412,7 +451,11 @@ func ejecutar_daño_directo(cantidad_golpes: int):
 			aplicar_daño_a_vida(daño_por_golpe)
 		
 		if i < cantidad_golpes - 1 and not boss_muerto:
-			print("  ⏱️ Esperando 2 segundos entre golpes...")
+			print("  ⏱️ Esperando 0.8 segundos entre golpes...")
 			await get_tree().create_timer(0.8).timeout
+	
+	# Al final, asegurar que el contador quede en 0
+	if actualizar_contadores_callback.is_valid():
+		actualizar_contadores_callback.call(-1, -1, 0)
 	
 	print("🎬 ===== FIN SECUENCIA GOLPES DIRECTOS =====")

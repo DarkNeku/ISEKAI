@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://b2r8purmb6grb"]
+[gd_scene load_steps=32 format=3 uid="uid://b2r8purmb6grb"]
 
 [ext_resource type="PackedScene" uid="uid://cq2d3r0eww2mw" path="res://SPRITE/BOSS_1.tscn" id="1_2nsg4"]
 [ext_resource type="Script" uid="uid://b3rwxmh12dwh8" path="res://SCRIPT/boss_001.gd" id="1_6h5nb"]
@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://c57ah0u2k23hr" path="res://SPRITE/GOLPE_ESPECIAL.tscn" id="16_xui88"]
 [ext_resource type="PackedScene" uid="uid://b724176mpcea7" path="res://SPRITE/ESCUDO_ESPECIAL.tscn" id="17_kr143"]
 [ext_resource type="PackedScene" uid="uid://btxm0j6r01huc" path="res://SPRITE/GOLPE_DIRECTO.tscn" id="18_4ltd2"]
+[ext_resource type="Script" uid="uid://dkayo8or1bprs" path="res://SCRIPT/COMBATE_BOSS_002.gd" id="20_mgrxv"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_adh1r"]
 
@@ -564,3 +565,6 @@ cancel_button_text = "NO"
 
 [node name="COMBATE_BOSS_001" type="Node" parent="."]
 script = ExtResource("14_adh1r")
+
+[node name="COMBATE_BOSS_002" type="Node" parent="."]
+script = ExtResource("20_mgrxv")

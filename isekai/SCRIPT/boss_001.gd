@@ -34,6 +34,9 @@ var historial_golpes = []
 func _ready():
 	cargar_jugadores()
 	
+	# Callback para actualizar contadores en tiempo real
+	var callback = Callable(self, "actualizar_contadores_en_tiempo_real")
+	
 	combate.inicializar(
 		$Panel/Control/GridContainer/Panel3/LBL_DEFF,
 		$Panel/Control/GridContainer/Panel3/LBL_DEFF_2,
@@ -45,7 +48,8 @@ func _ready():
 		$Panel/GOLPE_DIRECTO,
 		$Panel/ESCUDO_FISICO,
 		$Panel/ESCUDO_ESPECIAL,
-		$Panel/BOSS_1/AnimatedSprite2D
+		$Panel/BOSS_1/AnimatedSprite2D,
+		callback
 	)
 	
 	reproducir_animacion_si_existe($Panel/BOSS_1/AnimatedSprite2D, "QUIETO", "BOSS_1")
@@ -85,6 +89,15 @@ func _ready():
 	set_botones_visibles(true)
 	
 	lanzar_dado()
+
+# Callback para actualizar contadores en tiempo real
+func actualizar_contadores_en_tiempo_real(fisico: int, especial: int, directo: int):
+	if fisico >= 0:
+		lbl_fisico.text = str(fisico)
+	if especial >= 0:
+		lbl_especial.text = str(especial)
+	if directo >= 0:
+		lbl_directo.text = str(directo)
 
 func ocultar_animaciones():
 	for anim in [$Panel/GOLPE_FISICO, $Panel/GOLPE_ESPECIAL, $Panel/GOLPE_DIRECTO, $Panel/ESCUDO_FISICO, $Panel/ESCUDO_ESPECIAL]:
@@ -191,11 +204,9 @@ func _on_BTN_OK_pressed():
 		print("⚠️ Boss ya está muerto, no se puede atacar")
 		return
 	
-	# Guardar valores actuales de escudos
 	var escudo_fisico_actual = combate.get_escudo_fisico_actual()
 	var escudo_especial_actual = combate.get_escudo_especial_actual()
 	
-	# Determinar orden de ataque (primero el escudo con MENOS vida)
 	var atacar_primero_fisico = escudo_fisico_actual <= escudo_especial_actual
 	
 	print("🎯 ORDEN DE ATAQUE:")
@@ -203,42 +214,37 @@ func _on_BTN_OK_pressed():
 	print("  🛡️ Escudo Especial: ", escudo_especial_actual)
 	print("  → Atacar PRIMERO al: ", "FÍSICO" if atacar_primero_fisico else "ESPECIAL")
 	
-	# ============================================
-	# PASO 1: Atacar al escudo con MENOS vida
-	# ============================================
 	if atacar_primero_fisico:
 		if contador_fisico > 0:
 			print("🎬 PASO 1: Atacando escudo FÍSICO (menor)")
-			await combate.ejecutar_daño_fisico(contador_fisico)
+			await combate.ejecutar_daño_fisico(contador_fisico, contador_fisico)
 			await get_tree().create_timer(0.5).timeout
 		
 		if contador_especial > 0:
 			print("🎬 PASO 2: Atacando escudo ESPECIAL (mayor)")
-			await combate.ejecutar_daño_especial(contador_especial)
+			await combate.ejecutar_daño_especial(contador_especial, contador_especial)
 			await get_tree().create_timer(0.5).timeout
 	else:
 		if contador_especial > 0:
 			print("🎬 PASO 1: Atacando escudo ESPECIAL (menor)")
-			await combate.ejecutar_daño_especial(contador_especial)
+			await combate.ejecutar_daño_especial(contador_especial, contador_especial)
 			await get_tree().create_timer(0.5).timeout
 		
 		if contador_fisico > 0:
 			print("🎬 PASO 2: Atacando escudo FÍSICO (mayor)")
-			await combate.ejecutar_daño_fisico(contador_fisico)
+			await combate.ejecutar_daño_fisico(contador_fisico, contador_fisico)
 			await get_tree().create_timer(0.5).timeout
 	
-	# ============================================
-	# PASO 3: Daño DIRECTO (siempre al final)
-	# ============================================
 	if contador_directo > 0:
 		print("🎬 PASO 3: Daño DIRECTO")
-		await combate.ejecutar_daño_directo(contador_directo)
+		await combate.ejecutar_daño_directo(contador_directo, contador_directo)
 		await get_tree().create_timer(0.5).timeout
 	
-	# Reiniciar contadores
+	# Reiniciar solo los escudos que están en negativo
+	combate.reiniciar_contadores_escudos()
+	
 	reiniciar_contadores()
 	
-	# Cambiar de jugador
 	indice_jugador_actual += 1
 	contador_ok += 1
 	
@@ -271,7 +277,6 @@ func _on_dado_animation_finished():
 	if animated_dado.animation == "LANZAMIENTO":
 		dado.visible = false
 		
-		# Si el boss ya está muerto, no hacer nada más
 		if combate.is_boss_muerto():
 			set_botones_activos(false)
 			set_botones_visibles(false)
@@ -282,14 +287,13 @@ func _on_dado_animation_finished():
 		$Panel/BOSS_2/AnimatedSprite2D.play("ATAQUE")
 		await get_tree().create_timer(0.7).timeout
 		
-		# Verificar nuevamente antes de volver a QUIETO
 		if not combate.is_boss_muerto():
 			$Panel/BOSS_1/AnimatedSprite2D.play("QUIETO")
 			$Panel/BOSS_2/AnimatedSprite2D.play("QUIETO")
 		
 		set_botones_activos(true)
 		set_botones_visibles(true)
-		
+
 func configurar_barra_vida():
 	var barra = $Panel/VIDA_BOSS
 	barra.max_value = 100
@@ -297,7 +301,6 @@ func configurar_barra_vida():
 	barra.value = 100
 	barra.custom_minimum_size = Vector2(300, 30)
 	
-	# Conectar señal para detectar cuando la vida llega a 0
 	barra.value_changed.connect(_on_vida_cambiada)
 	
 	var estilo_lleno = StyleBoxFlat.new()
@@ -322,17 +325,13 @@ func configurar_barra_vida():
 	
 	barra.show_percentage = false
 
-# Señal para detectar cuando la vida cambia
 func _on_vida_cambiada(nuevo_valor: float):
 	if nuevo_valor <= 0:
 		print("💀 BOSS DERROTADO - Deshabilitando todo")
-		# Solo reproducir muerte, nada más
 		$Panel/BOSS_1/AnimatedSprite2D.play("MUERTE")
-		# Deshabilitar botones
 		set_botones_activos(false)
 		set_botones_visibles(false)
 		btn_lanzar.visible = false
-		# No hacer nada más que pueda interrumpir la animación
-		
+
 func _process(_delta):
 	pass
