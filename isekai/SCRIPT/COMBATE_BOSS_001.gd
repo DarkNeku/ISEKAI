@@ -2,6 +2,7 @@
 extends Node
 
 signal boss_derrotado
+signal boss_ataca
 
 # ============================================
 # VARIABLES DE ESCUDOS
@@ -20,6 +21,8 @@ var lbl_deff_2: Label = null
 var lbl_defs: Label = null
 var lbl_defs_2: Label = null
 var barra_vida: ProgressBar = null
+var lbl_ataf: Label = null
+var lbl_atas: Label = null
 
 # Animaciones
 var ani_golpe_fisico: AnimatedSprite2D = null
@@ -37,6 +40,7 @@ var actualizar_contadores_callback: Callable = Callable()
 # ============================================
 func inicializar(
 	_lbl_deff: Label, _lbl_deff_2: Label, _lbl_defs: Label, _lbl_defs_2: Label, _barra_vida: ProgressBar,
+	_lbl_ataf: Label, _lbl_atas: Label,
 	_ani_golpe_fisico: AnimatedSprite2D, _ani_golpe_especial: AnimatedSprite2D, _ani_golpe_directo: AnimatedSprite2D,
 	_ani_escudo_fisico: AnimatedSprite2D, _ani_escudo_especial: AnimatedSprite2D, _boss_1: AnimatedSprite2D,
 	_callback: Callable
@@ -46,6 +50,8 @@ func inicializar(
 	lbl_defs = _lbl_defs
 	lbl_defs_2 = _lbl_defs_2
 	barra_vida = _barra_vida
+	lbl_ataf = _lbl_ataf
+	lbl_atas = _lbl_atas
 	ani_golpe_fisico = _ani_golpe_fisico
 	ani_golpe_especial = _ani_golpe_especial
 	ani_golpe_directo = _ani_golpe_directo
@@ -76,6 +82,9 @@ func actualizar_escudos_con_dados(nuevo_fisico: int, nuevo_especial: int):
 		lbl_defs.text = str(escudo_especial_base)
 	if lbl_defs_2:
 		lbl_defs_2.text = str(escudo_especial_actual)
+	
+	print("🛡️ Escudos BOSS_1 -> Físico: ", escudo_fisico_actual, "/", escudo_fisico_base)
+	print("🛡️ Escudos BOSS_1 -> Especial: ", escudo_especial_actual, "/", escudo_especial_base)
 
 # ============================================
 # ACTUALIZAR UI DE ESCUDOS EN TIEMPO REAL
@@ -87,6 +96,34 @@ func actualizar_ui_escudo_fisico():
 func actualizar_ui_escudo_especial():
 	if lbl_defs_2:
 		lbl_defs_2.text = str(escudo_especial_actual)
+
+# ============================================
+# ATAQUE DEL BOSS A LOS JUGADORES
+# ============================================
+func ejecutar_ataque_boss():
+	if boss_muerto:
+		return
+	
+	var vida_actual = barra_vida.value
+	var vida_maxima = barra_vida.max_value
+	var porcentaje_vida = (vida_actual / vida_maxima) * 100
+	
+	var daño_fisico: int
+	var daño_especial: int
+	
+	if porcentaje_vida > 50:
+		daño_fisico = randi_range(0, 4)
+		daño_especial = randi_range(0, 4)
+		print("💀 ATAQUE DEL BOSS (vida > 50%): Físico: ", daño_fisico, " | Especial: ", daño_especial)
+	else:
+		daño_fisico = randi_range(1, 5)
+		daño_especial = randi_range(1, 5)
+		print("💀 ATAQUE DEL BOSS (vida ≤ 50% - BOOST): Físico: ", daño_fisico, " | Especial: ", daño_especial)
+	
+	if lbl_ataf:
+		lbl_ataf.text = str(daño_fisico)
+	if lbl_atas:
+		lbl_atas.text = str(daño_especial)
 
 # ============================================
 # CÁLCULOS DE DAÑO
@@ -178,7 +215,7 @@ func aplicar_daño_a_vida(cantidad: int) -> int:
 	var vida_anterior = barra_vida.value
 	var vida_nueva = max(0, vida_anterior - cantidad)
 	barra_vida.value = vida_nueva
-	print("💥 Daño a BOSS_1: ", cantidad, " | Vida restante: ", vida_nueva)
+	print("💥 Daño a BOSS_1: ", cantidad, " | Vida restante: ", vida_nueva, "/", barra_vida.max_value)
 	
 	if vida_nueva <= 0 and vida_anterior > 0:
 		boss_muerto = true
@@ -213,6 +250,16 @@ func get_escudo_especial_actual() -> int:
 
 func is_boss_muerto() -> bool:
 	return boss_muerto
+
+func get_vida_actual() -> float:
+	if barra_vida:
+		return barra_vida.value
+	return 0
+
+func get_vida_maxima() -> float:
+	if barra_vida:
+		return barra_vida.max_value
+	return 100
 
 # ============================================
 # FUNCIONES DE ANIMACIÓN
@@ -411,7 +458,7 @@ func ejecutar_daño_directo(cantidad_golpes: int, contador_original: int):
 	print("🔢 Cantidad de golpes: ", cantidad_golpes)
 	
 	var ambos_escudos_rotos = (escudo_fisico_actual <= 0 and escudo_especial_actual <= 0)
-	var daño_por_golpe = 10 if ambos_escudos_rotos else 5
+	var daño_por_golpe = 2 if ambos_escudos_rotos else 1
 	
 	print("  🛡️ Escudo Físico BOSS_1: ", escudo_fisico_actual)
 	print("  🛡️ Escudo Especial BOSS_1: ", escudo_especial_actual)
