@@ -223,15 +223,24 @@ func _on_BTN_RESTAR_pressed():
 func lanzar_y_calcular_dados():
 	if sistema_dados and sistema_dados.has_method("lanzar_todos_los_dados"):
 		var resultados = sistema_dados.lanzar_todos_los_dados(cantidad_jugadores)
-		print("🎲 Resultados dados -> ATAF: ", resultados.get("ataf", 0), " | ATAS: ", resultados.get("atas", 0), " | DEFF: ", resultados.get("deff", 0), " | DEFS: ", resultados.get("defs", 0))
+		print("🎲 Resultados dados -> ATAF: ", resultados.get("ataf", 0), " | ATAS: ", resultados.get("atas", 0))
 		
-		# Nueva fórmula: defensa_base + bonus del dado
-		var escudo_fisico = defensa_base_actual + resultados.get("deff", 0)
-		var escudo_especial = defensa_base_actual + resultados.get("defs", 0)
+		# Escudos: base de 1 a 10
+		var escudo_fisico = randi_range(1, 10)
+		var escudo_especial = randi_range(1, 10)
 		
-		# Limitar escudos
-		escudo_fisico = clamp(escudo_fisico, 1, 12)
-		escudo_especial = clamp(escudo_especial, 1, 12)
+		# Verificar si el boss tiene menos del 50% de vida
+		var vida_actual = $Panel/VIDA_BOSS.value
+		var vida_maxima = $Panel/VIDA_BOSS.max_value
+		var porcentaje_vida = (vida_actual / vida_maxima) * 100
+		
+		if porcentaje_vida <= 50:
+			# Si vida ≤ 50%, se suma un dado de 1 a 4
+			escudo_fisico += randi_range(1, 4)
+			escudo_especial += randi_range(1, 4)
+			print("🛡️ ESCUDOS BOOSTEADOS (vida ≤ 50%): +1d4")
+		
+		print("🛡️ Escudos finales -> Físico: ", escudo_fisico, " | Especial: ", escudo_especial)
 		
 		if not combate.is_boss_muerto():
 			combate.actualizar_escudos_con_dados(escudo_fisico, escudo_especial)

@@ -112,13 +112,13 @@ func ejecutar_ataque_boss():
 	var daño_especial: int
 	
 	if porcentaje_vida > 50:
-		daño_fisico = randi_range(0, 4)
-		daño_especial = randi_range(0, 4)
-		print("💀 ATAQUE DEL BOSS (vida > 50%): Físico: ", daño_fisico, " | Especial: ", daño_especial)
+		daño_fisico = randi_range(1, 10)
+		daño_especial = randi_range(1, 10)
+		print("💀 ATAQUE BOSS (vida > 50%): Físico: ", daño_fisico, " | Especial: ", daño_especial)
 	else:
-		daño_fisico = randi_range(1, 5)
-		daño_especial = randi_range(1, 5)
-		print("💀 ATAQUE DEL BOSS (vida ≤ 50% - BOOST): Físico: ", daño_fisico, " | Especial: ", daño_especial)
+		daño_fisico = randi_range(1, 10) + randi_range(1, 4)
+		daño_especial = randi_range(1, 10) + randi_range(1, 4)
+		print("💀 ATAQUE BOSS (vida ≤ 50% - BOOST): Físico: ", daño_fisico, " | Especial: ", daño_especial)
 	
 	if lbl_ataf:
 		lbl_ataf.text = str(daño_fisico)
